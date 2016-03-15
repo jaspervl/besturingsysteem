@@ -27,6 +27,7 @@ using std::vector;
 #include "FirstFit2.h"	// de FirstFit2 allocator (eager version)
 #include "NextFit.h"	// de NextFit allocator (lazy version)
 #include "NextFit2.h"	// de NextFit2 allocator (eager version)
+#include "PowerOfTwo.h"
 // TODO:
 // .... voeg hier je eigen variant(en) toe ....
 // bijvoorbeeld:
@@ -134,6 +135,7 @@ void	doOptions(int argc, char *argv[])
 		// Haal een optie uit argc/argv
 		// (en zet zonodig het bijbehorende argument in 'optarg')
 		opt = getopt(argc, argv, options);
+		opt = 'P';
 		switch (opt) {	// welke optie is dit?
 				// ALGEMEEN
 			case 's': // the size of the (imaginary) memory being managed
@@ -168,6 +170,9 @@ void	doOptions(int argc, char *argv[])
 			case 'N': // -n = NextFit2 allocator gevraagd
 				beheerders.push_back( new NextFit2 );
 				break;
+            case 'P':
+                beheerders.push_back( new PowerOfTwo );
+                break;
 			// TODO:
 			/*
 			case 'b': // -b = BestFit allocator gevraagd
@@ -238,27 +243,27 @@ int  main(int argc, char *argv[])
 		{
 			// Stel de geheugen-beheerder in ...
 			beheerder->setSize(size);
-			beheerder->setCheck(cflag);
-
-			// ... en maak dan een pseudo-applicatie met die beheerder
-			Application  *mp = new Application(beheerder, size);
-
-			if (tflag) {    // De -t optie gezien ?
-				cout << AC_BLUE "Testing " << beheerder->getType()
-					 << " with " << size << " units\n" AA_RESET;
-				mp->testing(); // ga dan de code testen
-			} else {
-				cout << AC_BLUE "Measuring " << beheerder->getType()
-					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
-				mp->randomscenario(aantal, vflag);
-				// TODO:
-				// .. vervang straks 'randomscenario' door iets toepasselijkers
-				// zodat je ook voorspelbare scenarios kan afhandelen.
-			}
-
-			// Nu alles weer netjes opruimen
-			delete  mp;
-			delete  beheerder;
+//			beheerder->setCheck(cflag);
+//
+//			// ... en maak dan een pseudo-applicatie met die beheerder
+//			Application  *mp = new Application(beheerder, size);
+//
+//			if (tflag) {    // De -t optie gezien ?
+//				cout << AC_BLUE "Testing " << beheerder->getType()
+//					 << " with " << size << " units\n" AA_RESET;
+//				mp->testing(); // ga dan de code testen
+//			} else {
+//				cout << AC_BLUE "Measuring " << beheerder->getType()
+//					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
+//				mp->randomscenario(aantal, vflag);
+//				// TODO:
+//				// .. vervang straks 'randomscenario' door iets toepasselijkers
+//				// zodat je ook voorspelbare scenarios kan afhandelen.
+//			}
+//
+//			// Nu alles weer netjes opruimen
+//			delete  mp;
+//			delete  beheerder;
 		}// for-each
 
 	} catch (const char *error) {
