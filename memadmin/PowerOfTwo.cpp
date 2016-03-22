@@ -87,13 +87,8 @@ Area  *PowerOfTwo::alloc(int wanted)
     require(wanted > 0);
     require(wanted <= size);
 
-	// Bitshift till the wanted size fits the block.
-    int index = 0;
-    int value = (01 << MIN_SIZE);
-    while(value < wanted){
-        value <<= 1;
-        ++index;
-    }
+	// Calc best possible index with 2log of wanted.
+    int index = ceil(log2(wanted)) - MIN_SIZE;
 
     // Visit all Area size vectors starting from the perfect one, moving up the ladder.
     for(int i = index; i != available_areas.size(); i++){
