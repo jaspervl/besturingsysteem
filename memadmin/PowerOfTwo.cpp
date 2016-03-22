@@ -67,15 +67,14 @@ void	PowerOfTwo::dump()
 		if (it.size() > 0) {
             std::cout << "Index #" << i << ": [";
 			for (int ind = 0 ; ind < it.size() -1 ; ind++) {
-
-            std::cout << *it[ind] << ", ";
-		}
-            std::cout << *it[it.size() -1] << "]";
+				std::cout << *it[ind] << ", ";
+			}
+			std::cout << *it[it.size() -1] << "]";
 		} else {
             std::cout << "Index #" << i << ": [ ]";
 		}
-            std::cout << std::endl;
-            i++;
+		std::cout << std::endl;
+		i++;
     }
 }
 
