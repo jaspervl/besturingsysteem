@@ -39,7 +39,7 @@ class PowerOfTwo : public Allocator
         void    	report();
 
 		/// Return the absolute maximum memory block size for this instance.
-        const inline int 	getMaxBlockSize()
+        inline int 	getMaxBlockSize()
         {
         	int index = available_areas.size() -1;
 			for (auto it = available_areas.rbegin() ; it != available_areas.rend(); ++it) {

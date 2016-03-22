@@ -85,7 +85,7 @@ Area  *PowerOfTwo::alloc(int wanted)
 	++nrOfAllocations;
 	// Require the wanted number to make sense.
     require(wanted > 0);
-    require(wanted <= getMaxBlockSize());
+    require(wanted <= size);
 
 	// Bitshift till the wanted size fits the block.
     int index = 0;
@@ -111,7 +111,7 @@ Area  *PowerOfTwo::alloc(int wanted)
         }
     }
     // No area could be found.
-    return 0;
+    throw std::logic_error("Er is geen plek gevonden met genoeg ruimte.");
 }
 
 
