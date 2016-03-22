@@ -89,6 +89,7 @@ Area  *PowerOfTwo::alloc(int wanted)
 
 	// Calc best possible index with 2log of wanted.
     int index = ceil(log2(wanted)) - MIN_SIZE;
+    if (index < 0) index = 0;
 
     // Visit all Area size vectors starting from the perfect one, moving up the ladder.
     for(int i = index; i != available_areas.size(); i++){
