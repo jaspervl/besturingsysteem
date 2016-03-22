@@ -18,18 +18,24 @@ PowerOfTwo::~PowerOfTwo()
 // Initializes how much memory we own
 void  PowerOfTwo::setSize(int new_size)
 {
-	require(available_areas == 0);					// prevent changing the size when the arrays are initialized
+    // prevent changing the size when the arrays are initialized
 	int base = (01 << MIN_SIZE);
     int index;
     for (index = MIN_SIZE ; base < new_size ; ++index) {
         base <<= 1; // Bitshift
         /// 0 = 1  1 = 2  2 = 4  3 = 8 4 = 16 5 = 32
     }
-    std::cout << "HET IS KAPOT";
+
     --index;
     if(index >= MIN_SIZE){
         /// vector<Area*> available_areas = new Vector<Area*>[index - MIN_SIZE + 1];
-        available_areas = new std::vector<Area*>[index - MIN_SIZE + 1];
+        int arrSize = index - MIN_SIZE + 1;
+        std::cout << "VALUE" << arrSize << std::endl;
+        for(int i = 0; i < arrSize;i++){
+            available_areas.push_back(new std::vector<Area*>);
+        }
+        std::cout << available_areas.size();
+
     }
     else {
         /// If we can't contain the requested size in our minimal area size,throw an exception
@@ -50,9 +56,8 @@ void  PowerOfTwo::setSize(int new_size)
 	for (int i = index; i >= MIN_SIZE;i--) {
         int block = pow(2,i);
 		if(new_size - block >= 0){
-             available_areas[i].push_back(new Area(available_size,block));
+           // available_areas[i].push_back(new Area(available_size,block));
             available_size += block;
-
 		}
 
 	}

@@ -41,7 +41,7 @@ class PowerOfTwo : public Allocator
         /// Define the minimal size of the area ( ex : 1  is 2^1 = 2  || 2 is  2 ^ 2 = 4 ...)
         const int  MIN_SIZE = 2;
         /// List of all the available free areas, define as nul pointers for initialization and safety precautions
-        std::vector<Area*> *available_areas = 0;
+        std::vector<std::vector<Area*>> available_areas;
 
 
         /// For debugging this function shows the free area list
