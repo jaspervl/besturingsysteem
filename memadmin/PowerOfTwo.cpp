@@ -83,27 +83,30 @@ Area  *PowerOfTwo::alloc(int wanted)
 {
     require(wanted > 0);
     require(wanted <= size);
-    std::cout << size << ":" << wanted << std::endl;
+
+	// Bitshift till the wanted size fits the block.
     int index = 0;
     int value = (01 << MIN_SIZE);
     while(value < wanted){
         value <<= 1;
         ++index;
     }
-    for(int i = index;i != available_areas.size();i++){
+
+    // Visit all Area size vectors starting from the perfect one, moving up the ladder.
+    for(int i = index; i != available_areas.size(); i++){
         if(available_areas[i].size() > 0){
             Area* area = available_areas[i].back();
             available_areas[i].pop_back();
-            // 32
-            // 1024* -> 512 / 512* -> 512 / 256 / 256* -> 512 / 256 / 128 / 128* -> 128 / 64 / 64* -> 128 / 64 / 32 / 32*
+            // Split first are that is larger than needed and free until it fits.
             while(i > index){
                 available_areas[i - 1].push_back(area -> split((01 << (MIN_SIZE + i)) / 2));
                 --i;
             }
-            dump();
+            // Return the perfect matching area.
             return area;
         }
     }
+    // No area could be found.
     return 0;
 }
 
