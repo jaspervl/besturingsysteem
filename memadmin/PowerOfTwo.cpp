@@ -40,7 +40,7 @@ void  PowerOfTwo::setSize(int new_size)
         throw 1;
     }
 
-    int available_size = 0;
+    int available_size = new_size;
 //    int counter = index;
 //	for ( = available_areas ->rbegin(); i != available_areas ->rend()  ; i++) {
 //        int block = pow(2,counter--);
@@ -53,16 +53,16 @@ void  PowerOfTwo::setSize(int new_size)
 
 	for (int i = index; i >= MIN_SIZE;i--) {
         int block = pow(2,i);
-		if(new_size - block >= 0){
+		if(available_size - block >= 0){
             available_areas.at(i - MIN_SIZE).push_back(new Area(available_size,block));
-            available_size += block;
+            available_size -= block;
 		}
 
 	}
 
 	dump();
-
-	Allocator::setSize(available_size);
+	Allocator::setSize(new_size - available_size);
+    std::cout << "WANTED : " << new_size << " ACTUAL : " << size << std::endl;
 
 }
 
@@ -87,6 +87,7 @@ Area  *PowerOfTwo::alloc(int wanted)
 {
     require(wanted > 0);
     require(wanted <= size);
+    std::cout << size << ":" << wanted << std::endl;
     int index = 0;
     int value = (01 << MIN_SIZE);
     while(value < wanted){
@@ -114,8 +115,15 @@ Area  *PowerOfTwo::alloc(int wanted)
 // Application returns an area no longer needed
 void	PowerOfTwo::free(Area *ap)
 {
-    available_areas.at(log2(ap ->getSize()) - MIN_SIZE).push_back(ap);
-    dump();
+    int index = log2(ap ->getSize()) - MIN_SIZE;
+    for(auto a : available_areas.at(index)){
+        if(a ->overlaps(ap)){
+            throw 1;
+        }
+    }
+
+   available_areas.at(log2(ap ->getSize()) - MIN_SIZE).push_back(ap);
+   dump();
 }
 
 

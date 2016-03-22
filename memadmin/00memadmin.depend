@@ -32,7 +32,7 @@
 1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\allocator.h
 	"Area.h"
 
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\application.cc
+1458662333 source:c:\users\jasper\desktop\besturingsysteem\memadmin\application.cc
 	<cstdlib>
 	"main.h"
 	"Stopwatch.h"
@@ -140,7 +140,7 @@
 	<string>
 	"where.h"
 
-1458658704 source:c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.cpp
+1458663075 source:c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.cpp
 	"PowerOfTwo.h"
 	"ansi.h"
 	<math.h>
