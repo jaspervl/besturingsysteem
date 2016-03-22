@@ -27,18 +27,9 @@ using std::vector;
 #include "FirstFit2.h"	// de FirstFit2 allocator (eager version)
 #include "NextFit.h"	// de NextFit allocator (lazy version)
 #include "NextFit2.h"	// de NextFit2 allocator (eager version)
-#include "PowerOfTwo.h"
-// TODO:
-// .... voeg hier je eigen variant(en) toe ....
-// bijvoorbeeld:
-//#include "BestFit.h"		// pas de naam aan aan jouw versie
-//#include "BestFit2.h"		// pas de naam aan aan jouw versie
-//#include "WorstFit.h"		// pas de naam aan aan jouw versie
-//#include "WorstFit2.h"		// pas de naam aan aan jouw versie
-//#include "PowerOfTwo.h"	// pas de naam aan aan jouw versie
-//#include "McKusickK.h"	// pas de naam aan aan jouw versie
-//#include "Buddy.h"		// pas de naam aan aan jouw versie
-//enz
+/// CUSTOM
+#include "PowerOfTwo.h" // de Power of two allocator
+/// EINDE CUSTOM
 
 
 // ===================================================================
@@ -81,17 +72,9 @@ void	tellOptions(const char *progname)
 	cout << "\t-F\t\tuse the first fit allocator (eager)\n";
 	cout << "\t-n\t\tuse the next fit allocator (lazy)\n";
 	cout << "\t-N\t\tuse the next fit allocator (eager)\n";
-	// TODO:
-	// Fitter groep
-	//cout << "\t-b\t\tuse the best fit allocator (lazy)\n";
-	//cout << "\t-B\t\tuse the best fit allocator (eager)\n";
-	//cout << "\t-w\t\tuse the worst fit allocator (lazy)\n";
-	//cout << "\t-W\t\tuse the worst fit allocator (eager)\n";
-	// TODO:
-	// De power-of-2 groep
+			/// CUSTOM
 	cout << "\t-p\t\tuse power of 2 allocator\n";
-	//cout << "\t-m\t\tuse mckusick/karols allocator\n";
-	//cout << "\t-2\t\tuse buddy algorithm\n";
+			/// EINDE CUSTOM
 }
 
 
@@ -100,7 +83,6 @@ void	tellOptions(const char *progname)
 /// Kan/zal diverse globale variabelen veranderen !
 void	doOptions(int argc, char *argv[])
 {
-	// TODO:
 	char  options[] = "s:a:tvcrfFnNP"; // De opties die we willen herkennen
 	// Als je algoritmes toevoegt dan moet je de string hierboven uitbreiden.
 	// (Vergeet niet om de tellOptions functie hiervoor ook aan te passen)
@@ -169,26 +151,11 @@ void	doOptions(int argc, char *argv[])
 			case 'N': // -n = NextFit2 allocator gevraagd
 				beheerders.push_back( new NextFit2 );
 				break;
-
-			// TODO:
-			/*
-			case 'b': // -b = BestFit allocator gevraagd
-				beheerders.push_back( new BestFit );
-				break;
-			case 'B': // -B = BestFit2 allocator gevraagd
-				beheerders.push_back( new BestFit2 );
-				break;
-			case 'w': // -w = WorstFit allocator gevraagd
-				beheerders.push_back( new WorstFit );
-				break;
-			case 'W': // -W = WorstFit2 allocator gevraagd
-				beheerders.push_back( new WorstFit2 );
-				break;
-				// enz
-				*/
+			/// CUSTOM
 			case 'P':	// -P = Power of two allocator gevraagd
 				beheerders.push_back( new PowerOfTwo );
 				break;
+			/// EINDE CUSTOM
 
 
 			case -1: // = einde opties
@@ -254,9 +221,19 @@ int  main(int argc, char *argv[])
 				cout << AC_BLUE "Measuring " << beheerder->getType()
 					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
 				mp->randomscenario(aantal, vflag);
+
+
+
+
 				// TODO:
 				// .. vervang straks 'randomscenario' door iets toepasselijkers
 				// zodat je ook voorspelbare scenarios kan afhandelen.
+
+
+
+
+
+
 			}
 
 			// Nu alles weer netjes opruimen

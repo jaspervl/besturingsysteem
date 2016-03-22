@@ -3,9 +3,9 @@
 #define POWEROFTWO_H
 
 /** @file PowerOfTwo.h
- *  @brief The class that implements the power of two algoritme
+ *  @brief The class that defines the power of two algoritme.
  *  @author Jasper v. Lierop & Niels Jan van de Pol
- *  @version 2.2	2014/01/30
+ *  @version 3.0	2016/03/22
  */
 
 #include "Allocator.h"
@@ -13,7 +13,6 @@
 
 
 /// @class PowerOfTwo
-
 class PowerOfTwo : public Allocator
 {
     public:
@@ -25,8 +24,8 @@ class PowerOfTwo : public Allocator
 		: Allocator(cflag, type) {}
         ~PowerOfTwo();
 
-
-        void	 setSize(int new_size);	///< initialize memory size
+		/// initialize memory size
+        void	 setSize(int new_size);
 
         /// Ask for an area of at least 'wanted' units
         /// @returns	An area or 0 if not enough freespace available
@@ -38,11 +37,12 @@ class PowerOfTwo : public Allocator
         void    report();
 
     private:
-        /// Define the minimal size of the area ( ex : 1  is 2^1 = 2  || 2 is  2 ^ 2 = 4 ...)
-        const int  MIN_SIZE = 5;
+
         /// List of all the available free areas, define as nul pointers for initialization and safety precautions
         std::vector<std::vector<Area*>> available_areas;
 
+        /// Define the minimal size of the area ( ex : 1  is 2^1 = 2  || 2 is  2 ^ 2 = 4 ...)
+        const int  MIN_SIZE = 5;
 
         /// For debugging this function shows the free area list
         void	dump();
@@ -51,8 +51,8 @@ class PowerOfTwo : public Allocator
         /// @returns	An area or 0 if not enough freespace available
         Area 	*searcher(int);
 
-
-        void	updateStats();	///< update resource map statistics
+		/// update resource map statistics
+        void	updateStats();
 };
 
 #endif // POWEROFTWO_H

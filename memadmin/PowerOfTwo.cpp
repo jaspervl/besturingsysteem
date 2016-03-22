@@ -1,6 +1,9 @@
 //#ident	"@(#)PowerOfTwo.cc	2.2	AKK	20140130"
+
 /** @file PowerOfTwo.cc
- * De implementatie van PowerOfTwo.
+ *  @brief Implementation of the PowerOfTwo algorihm.
+ *  @author Jasper v. Lierop & Niels Jan van de Pol
+ *  @version 3.0	2016/03/22
  */
 
 #include "PowerOfTwo.h"
@@ -9,48 +12,39 @@
 #include <vector>
 #include <iostream>
 
-// Clean up dead stuff
+/// Clean up dead stuff.
 PowerOfTwo::~PowerOfTwo()
 {
 	// TODO : delete elements
 }
 
-// Initializes how much memory we own
+/// Initializes how much memory we own.
 void  PowerOfTwo::setSize(int new_size)
 {
-    // prevent changing the size when the arrays are initialized
+    // Determine the maximum possible 'power of 2' for the given new size.
+    // Combined with MIN_SIZE (minimum needed 'power of 2'
+	// this gives the number of indexes inside available_areas.
 	int base = (01 << MIN_SIZE);
     int index;
     for (index = MIN_SIZE ; base < new_size ; ++index) {
         base <<= 1; // Bitshift
-        /// 0 = 1  1 = 2  2 = 4  3 = 8 4 = 16 5 = 32
     }
 
+    // Create all vectors inside the available_areas to hold certain sized Area pointers.
     --index;
     if(index >= MIN_SIZE){
-        /// vector<Area*> available_areas = new Vector<Area*>[index - MIN_SIZE + 1];
         int arrSize = index - MIN_SIZE + 1;
         for(int i = 0; i < arrSize;i++){
             available_areas.push_back(*new std::vector<Area*>);
         }
-
     }
+	// The given new_size does not fit inside our MIN_SIZE, thus a exception is thrown.
     else {
-        /// If we can't contain the requested size in our minimal area size,throw an exception
         throw 1;
     }
 
+	// Eat up all available space by filling the space with blocks of the power of 2, starting from the biggest power.
     int available_size = new_size;
-//    int counter = index;
-//	for ( = available_areas ->rbegin(); i != available_areas ->rend()  ; i++) {
-//        int block = pow(2,counter--);
-//		if(new_size - block >= 0){
-//            i -> push_back(new Area(available_size,block));
-//            available_size += block;
-//		}
-//
-//	}
-
 	for (int i = index; i >= MIN_SIZE;i--) {
         int block = pow(2,i);
 		if(available_size - block >= 0){
@@ -60,22 +54,26 @@ void  PowerOfTwo::setSize(int new_size)
 
 	}
 
-	dump();
+	// Set the size of the super class attribute.
 	Allocator::setSize(new_size - available_size);
-    std::cout << "WANTED : " << new_size << " ACTUAL : " << size << std::endl;
-
 }
 
-// Print the current freelist for debugging
+/// Print the current vectors with free Area pointers for debugging.
 void	PowerOfTwo::dump()
 {
     int i = 0;
-    std::cout << "ENTERING DUMP" << std::endl;
+    std::cout << "Available area's:" << std::endl;
     for(auto it : available_areas){
-            std::cout << "#" << i << ": ";
-        for(auto x : it){
-            std::cout << *x << ", ";
-        }
+		if (it.size() > 0) {
+            std::cout << "Index #" << i << ": [";
+			for (int ind = 0 ; ind < it.size() -1 ; ind++) {
+
+            std::cout << *it[ind] << ", ";
+		}
+            std::cout << *it[it.size() -1] << "]";
+		} else {
+            std::cout << "Index #" << i << ": [ ]";
+		}
             std::cout << std::endl;
             i++;
     }
