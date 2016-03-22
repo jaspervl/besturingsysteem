@@ -53,6 +53,12 @@ class PowerOfTwo : public Allocator
         /// The current number of allocated blocks
         int 		nrOfAllocBlocks = 0;
 
+		/// The current number of allocations called
+        int 		nrOfAllocations = 0;
+
+		/// The current number of frees called
+        int 		nrOfFrees = 0;
+
 		/// Total number of free blocks
 		inline int 	calcFreeBlocks() {
 			int counter = 0;

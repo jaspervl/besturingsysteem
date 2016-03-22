@@ -81,6 +81,8 @@ void	PowerOfTwo::dump()
 /// Application wants 'wanted' memory
 Area  *PowerOfTwo::alloc(int wanted)
 {
+	++nrOfAllocations;
+	// Require the wanted number to make sense.
     require(wanted > 0);
     require(wanted <= getMaxBlockSize());
 
@@ -115,6 +117,7 @@ Area  *PowerOfTwo::alloc(int wanted)
 /// Application returns an area no longer needed
 void	PowerOfTwo::free(Area *ap)
 {
+	++nrOfFrees;
 	// Require the Area pointer to be not null.
 	require(ap != 0);
 
@@ -137,6 +140,8 @@ void PowerOfTwo::report(){
     std::cout << "\t\tFree blocks: " << calcFreeBlocks() << std::endl;
     std::cout << "\t\tAllocated blocks: " << nrOfAllocBlocks << std::endl;
     std::cout << "\tAverage block size: " << calcAvgBlockSize() << std::endl;
+    std::cout << "\tAllocation is called: " << nrOfAllocations << " times" << std::endl;
+    std::cout << "\tFree is called: " << nrOfFrees <<  " times" << std::endl;
     std::cout << "***********************************************" << std::endl;
 
 }
