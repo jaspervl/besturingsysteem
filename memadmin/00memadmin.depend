@@ -180,7 +180,7 @@
 1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.h
 	"Area.h"
 
-1458674258 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\application.cc
+1458676088 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\application.cc
 	<cstdlib>
 	"main.h"
 	"Stopwatch.h"
@@ -244,14 +244,14 @@
 1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.h
 	"NextFit.h"
 
-1458675273 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
+1458675536 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
 	"PowerOfTwo.h"
 	"ansi.h"
 	"math.h"
 	<vector>
 	<iostream>
 
-1458675561 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
+1458675613 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
 	"Allocator.h"
 	<vector>
 	"math.h"
@@ -283,7 +283,7 @@
 	<string>
 	"where.h"
 
-1458675399 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\main.cc
+1458675813 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\main.cc
 	<vector>
 	<cstdlib>
 	<getopt.h>
