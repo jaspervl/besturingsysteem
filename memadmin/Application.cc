@@ -220,7 +220,7 @@ void	Application::testing()
 					vergeetOudste(); 				// geheugen van stap 4 weer vrijgeven
 					// Zou geen problemen mogen geven
 					--failed_steps;
-					cerr << AC_GREEN "OKE, TEST SUCCEEDED" AA_RESET "\n";
+					cerr << AC_GREEN "OKE, TEST SUCCEEDED PROPERLY" AA_RESET "\n";
 					cerr << "Stap " << (++fase) << ":\n";
 					/*FALLTHRU*/
 				case 6:
@@ -234,7 +234,7 @@ void	Application::testing()
 						// 'beheerder->free' does not delete 'bp'
 					cerr << AC_RED "TEST FAILED" AA_RESET "\n";
 					++failed_steps;
-					//cerr << "Stap " << ( ++fase ) << ":\n";
+					cerr << "Stap " << ( ++fase ) << ":\n";
 					/*FALLTHRU*/
 					// Voeg zonodig nog andere testcases toe
 				default:
@@ -249,7 +249,7 @@ void	Application::testing()
 			}
 		} catch (const std::logic_error& error) {
 			cerr << error.what() << endl;
-			cerr << AC_GREEN "OKE, TEST SUCCEEDED" AA_RESET "\n";
+			cerr << AC_GREEN "OKE, TEST SUCCEEDED (Except for test 5)" AA_RESET "\n";
 		}
 	}//while fase
 }

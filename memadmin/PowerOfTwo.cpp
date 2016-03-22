@@ -51,7 +51,6 @@ void  PowerOfTwo::setSize(int new_size)
             available_areas.at(i - MIN_SIZE).push_back(new Area(available_size,block));
             available_size -= block;
 		}
-
 	}
 
 	// Set the size of the super class attribute.
@@ -79,7 +78,7 @@ void	PowerOfTwo::dump()
 }
 
 
-// Application wants 'wanted' memory
+/// Application wants 'wanted' memory
 Area  *PowerOfTwo::alloc(int wanted)
 {
     require(wanted > 0);
@@ -109,60 +108,33 @@ Area  *PowerOfTwo::alloc(int wanted)
 }
 
 
-// Application returns an area no longer needed
+/// Application returns an area no longer needed
 void	PowerOfTwo::free(Area *ap)
 {
+	// Require the Area pointer to be not null.
+	require(ap != 0);
+
+    // Require no area of same size to overlap with the freed Area pointer.
     int index = log2(ap ->getSize()) - MIN_SIZE;
     for(auto a : available_areas.at(index)){
-        if(a ->overlaps(ap)){
-            throw 1;
-        }
+        require (!(a ->overlaps(ap)));
     }
 
-   available_areas.at(log2(ap ->getSize()) - MIN_SIZE).push_back(ap);
-   dump();
+	// Push the freed Area on the back of the vertex with corresponding size.
+    available_areas.at(index).push_back(ap);
 }
 
-
-// ----- internal utilities -----
-
-// Search for an area with at least 'wanted' memory
-Area  *PowerOfTwo::searcher(int wanted)
-{
-	require(wanted > 0);		// has to be "something",
-	require(wanted <= size);	// but not more than can exist,
-	//require(!available_areas ->empty());	// provided we do have something to give
-
-	// Search thru all available areas
-//	for(ALiterator  i = areas.begin() ; i != areas.end() ; ++i) {
-//		Area  *ap = *i;					// Candidate item
-//		if(ap->getSize() >= wanted) {	// Large enough?
-//			// Yes, use this area;
-//			// The 'erase' operation below invalidates the 'i' iterator
-//			// but it does return a valid iterator to the next element.
-//			ALiterator  next = areas.erase(i);	// Remove this element from the freelist
-//			if(ap->getSize() > wanted) {		// Larger than needed ?
-//				Area  *rp = ap->split(wanted);	// Split into two parts (updating sizes)
-//				areas.insert(next, rp);			// Insert remainder before "next" area
-//			}
-//			return  ap;
-//		}
-//	}
-//	return  0; // report failure
-}
-
-
-
-// Update statistics
+/// Update statistics
 void	PowerOfTwo::updateStats()
 {
-//	++qcnt;									// number of 'alloc's
-//	qsum  += areas.size();					// length of resource map
-//	qsum2 += (areas.size() * areas.size());	// same: squared
+	// TODO
+	//	++qcnt;									// number of 'alloc's
+	//	qsum  += areas.size();					// length of resource map
+	//	qsum2 += (areas.size() * areas.size());	// same: squared
 }
 
 void PowerOfTwo::report(){
-
+	// TODO
 }
 
 // vim:sw=4:ai:aw:ts=4:

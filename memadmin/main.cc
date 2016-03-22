@@ -83,7 +83,7 @@ void	tellOptions(const char *progname)
 /// Kan/zal diverse globale variabelen veranderen !
 void	doOptions(int argc, char *argv[])
 {
-	char  options[] = "s:a:tvcrfFnNP"; // De opties die we willen herkennen
+	char  options[] = "s:a:tvcP"; // De opties die we willen herkennen
 	// Als je algoritmes toevoegt dan moet je de string hierboven uitbreiden.
 	// (Vergeet niet om de tellOptions functie hiervoor ook aan te passen)
 	// Als je alle algoritmes zou realiseren dan wordt
