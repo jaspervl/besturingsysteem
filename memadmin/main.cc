@@ -89,7 +89,7 @@ void	tellOptions(const char *progname)
 	//cout << "\t-W\t\tuse the worst fit allocator (eager)\n";
 	// TODO:
 	// De power-of-2 groep
-	//cout << "\t-p\t\tuse power of 2 allocator\n";
+	cout << "\t-p\t\tuse power of 2 allocator\n";
 	//cout << "\t-m\t\tuse mckusick/karols allocator\n";
 	//cout << "\t-2\t\tuse buddy algorithm\n";
 }
@@ -135,7 +135,6 @@ void	doOptions(int argc, char *argv[])
 		// Haal een optie uit argc/argv
 		// (en zet zonodig het bijbehorende argument in 'optarg')
 		opt = getopt(argc, argv, options);
-		opt = 'P';
 		switch (opt) {	// welke optie is dit?
 				// ALGEMEEN
 			case 's': // the size of the (imaginary) memory being managed
@@ -170,10 +169,7 @@ void	doOptions(int argc, char *argv[])
 			case 'N': // -n = NextFit2 allocator gevraagd
 				beheerders.push_back( new NextFit2 );
 				break;
-            case 'P':
-                cout << "pushing power of two" << endl;
-                beheerders.push_back( new PowerOfTwo );
-                break;
+
 			// TODO:
 			/*
 			case 'b': // -b = BestFit allocator gevraagd
@@ -189,10 +185,11 @@ void	doOptions(int argc, char *argv[])
 				beheerders.push_back( new WorstFit2 );
 				break;
 				// enz
-			case '2':	// -2 = buddy allocator gevraagd
-				beheerders.push_back( new Buddy );
+				*/
+			case 'P':	// -P = Power of two allocator gevraagd
+				beheerders.push_back( new PowerOfTwo );
 				break;
-			*/
+
 
 			case -1: // = einde opties
 				return; // klaar met optie analyze
@@ -203,7 +200,7 @@ void	doOptions(int argc, char *argv[])
 				tellOptions(argv[0]);
 				exit(EXIT_FAILURE);
 		}
-	} while (false);     // tot einde opties
+	} while (opt != -1);     // tot einde opties
 }
 
 // ===================================================================
@@ -242,35 +239,29 @@ int  main(int argc, char *argv[])
 		// For all chosen allocators do
 		for (Allocator* beheerder : beheerders)
 		{
-			// Stel de geheugen-beheerder in ..
-			beheerder->setSize(2047);
-			beheerder->alloc(74);
-			beheerder->alloc(74);
-			beheerder->free(new Area(10000,256));
-			beheerder->free(new Area(100300,512));
-			beheerder->free(new Area(100300,512));
-			beheerder->free(new Area(100300,512));
-//			beheerder->setCheck(cflag);
-//
-//			// ... en maak dan een pseudo-applicatie met die beheerder
-//			Application  *mp = new Application(beheerder, size);
-//
-//			if (tflag) {    // De -t optie gezien ?
-//				cout << AC_BLUE "Testing " << beheerder->getType()
-//					 << " with " << size << " units\n" AA_RESET;
-//				mp->testing(); // ga dan de code testen
-//			} else {
-//				cout << AC_BLUE "Measuring " << beheerder->getType()
-//					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
-//				mp->randomscenario(aantal, vflag);
-//				// TODO:
-//				// .. vervang straks 'randomscenario' door iets toepasselijkers
-//				// zodat je ook voorspelbare scenarios kan afhandelen.
-//			}
-//
-//			// Nu alles weer netjes opruimen
-//			delete  mp;
-//			delete  beheerder;
+			// Stel de geheugen-beheerder in ...
+			beheerder->setSize(size);
+			beheerder->setCheck(cflag);
+
+			// ... en maak dan een pseudo-applicatie met die beheerder
+			Application  *mp = new Application(beheerder, size);
+
+			if (tflag) {    // De -t optie gezien ?
+				cout << AC_BLUE "Testing " << beheerder->getType()
+					 << " with " << size << " units\n" AA_RESET;
+				mp->testing(); // ga dan de code testen
+			} else {
+				cout << AC_BLUE "Measuring " << beheerder->getType()
+					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
+				mp->randomscenario(aantal, vflag);
+				// TODO:
+				// .. vervang straks 'randomscenario' door iets toepasselijkers
+				// zodat je ook voorspelbare scenarios kan afhandelen.
+			}
+
+			// Nu alles weer netjes opruimen
+			delete  mp;
+			delete  beheerder;
 		}// for-each
 
 	} catch (const char *error) {
