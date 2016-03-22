@@ -30,11 +30,9 @@ void  PowerOfTwo::setSize(int new_size)
     if(index >= MIN_SIZE){
         /// vector<Area*> available_areas = new Vector<Area*>[index - MIN_SIZE + 1];
         int arrSize = index - MIN_SIZE + 1;
-        std::cout << "VALUE" << arrSize << std::endl;
         for(int i = 0; i < arrSize;i++){
             available_areas.push_back(*new std::vector<Area*>);
         }
-        std::cout << available_areas.size();
 
     }
     else {
@@ -95,7 +93,6 @@ Area  *PowerOfTwo::alloc(int wanted)
         value <<= 1;
         ++index;
     }
-    std::cout << "TRES" << std::endl;
     for(int i = index;i != available_areas.size();i++){
         if(available_areas[i].size() > 0){
             Area* area = available_areas[i].back();

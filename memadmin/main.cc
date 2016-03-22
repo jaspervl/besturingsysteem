@@ -101,7 +101,7 @@ void	tellOptions(const char *progname)
 void	doOptions(int argc, char *argv[])
 {
 	// TODO:
-	char  options[] = "s:a:tvcrfFnN"; // De opties die we willen herkennen
+	char  options[] = "s:a:tvcrfFnNP"; // De opties die we willen herkennen
 	// Als je algoritmes toevoegt dan moet je de string hierboven uitbreiden.
 	// (Vergeet niet om de tellOptions functie hiervoor ook aan te passen)
 	// Als je alle algoritmes zou realiseren dan wordt
