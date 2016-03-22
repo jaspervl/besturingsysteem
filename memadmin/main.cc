@@ -171,6 +171,7 @@ void	doOptions(int argc, char *argv[])
 				beheerders.push_back( new NextFit2 );
 				break;
             case 'P':
+                cout << "pushing power of two" << endl;
                 beheerders.push_back( new PowerOfTwo );
                 break;
 			// TODO:
@@ -202,7 +203,7 @@ void	doOptions(int argc, char *argv[])
 				tellOptions(argv[0]);
 				exit(EXIT_FAILURE);
 		}
-	} while (opt != -1);     // tot einde opties
+	} while (false);     // tot einde opties
 }
 
 // ===================================================================
@@ -241,8 +242,9 @@ int  main(int argc, char *argv[])
 		// For all chosen allocators do
 		for (Allocator* beheerder : beheerders)
 		{
-			// Stel de geheugen-beheerder in ...
-			beheerder->setSize(size);
+			// Stel de geheugen-beheerder in ..
+			beheerder->setSize(500);
+			//beheerder->alloc(size / 2);
 //			beheerder->setCheck(cflag);
 //
 //			// ... en maak dan een pseudo-applicatie met die beheerder

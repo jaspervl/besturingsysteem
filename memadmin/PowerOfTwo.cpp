@@ -7,6 +7,7 @@
 #include "ansi.h"
 #include <math.h>
 #include <vector>
+#include <iostream>
 
 // Clean up dead stuff
 PowerOfTwo::~PowerOfTwo()
@@ -17,14 +18,14 @@ PowerOfTwo::~PowerOfTwo()
 // Initializes how much memory we own
 void  PowerOfTwo::setSize(int new_size)
 {
-	require(available_areas);					// prevent changing the size when the arrays are initialized
-	Allocator::setSize(0);
+	require(available_areas == 0);					// prevent changing the size when the arrays are initialized
 	int base = (01 << MIN_SIZE);
     int index;
     for (index = MIN_SIZE ; base < new_size ; ++index) {
         base <<= 1; // Bitshift
         /// 0 = 1  1 = 2  2 = 4  3 = 8 4 = 16 5 = 32
     }
+    std::cout << "HET IS KAPOT";
     --index;
     if(index >= MIN_SIZE){
         /// vector<Area*> available_areas = new Vector<Area*>[index - MIN_SIZE + 1];
@@ -55,6 +56,9 @@ void  PowerOfTwo::setSize(int new_size)
 		}
 
 	}
+
+	Allocator::setSize(available_size);
+
 }
 
 // Print the current freelist for debugging
@@ -67,30 +71,29 @@ void	PowerOfTwo::dump()
 // Application wants 'wanted' memory
 Area  *PowerOfTwo::alloc(int wanted)
 {
-	require(wanted > 0);		// has to be "something",
-	require(wanted <= size);	// but not more than can exist
-
-	updateStats();				// update resource map statistics
-
-	if(available_areas ->empty()) {		// iff we have nothing
-		return 0;    			// give up immediately
-	}
-
-	// Search thru all available free areas
-	Area  *ap = 0;
-	ap = searcher(wanted);		// first attempt
-	if(ap) {					// success ?
-		return ap;
-	}
-//	if(reclaim()) {			// could we reclaim fragmented freespace ?
-//		ap = searcher(wanted);	// then make a second attempt
-//		if(ap) {				// success ?
-//			return ap;
-//		}
-//	}
-	// Alas, failed to allocate anything
-	//dump();//DEBUG
-	return 0;					// inform caller we failed
+    require(wanted > 0);
+    require(wanted <= size);
+    int index = 0;
+    int value = (01 << MIN_SIZE);
+    while(value < wanted){
+        value <<= 1;
+        ++index;
+    }
+    std::cout << "TRES" << std::endl;
+    for(int i = index;i != available_areas ->size();i++){
+        if(available_areas[i].size() > 0){
+            Area* area = available_areas[i].back();
+            available_areas[i].pop_back();
+            // 32
+            // 1024* -> 512 / 512* -> 512 / 256 / 256* -> 512 / 256 / 128 / 128* -> 128 / 64 / 64* -> 128 / 64 / 32 / 32*
+            while(i > index){
+                available_areas[i - 1].push_back(area -> split((01 << (MIN_SIZE + i)) / 2));
+                --i;
+            }
+            return area;
+        }
+    }
+    return 0;
 }
 
 
