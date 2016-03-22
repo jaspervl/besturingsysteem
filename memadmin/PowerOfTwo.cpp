@@ -130,11 +130,14 @@ void	PowerOfTwo::free(Area *ap)
 }
 
 void PowerOfTwo::report(){
+    std::cout << "***********************************************" << std::endl;
     std::cout << "Power of Two stats: " << std::endl;
     std::cout << "\tTotal size: " << size  << ", max block size: " << getMaxBlockSize() << std::endl;
     std::cout << "\tNumber of blocks total: " << calcFreeBlocks() + nrOfAllocBlocks << std::endl;
-    std::cout << "\tNumber of free blocks: " << calcFreeBlocks() << std::endl;
-    std::cout << "\tNumber of allocated blocks: " << nrOfAllocBlocks << std::endl;
+    std::cout << "\t\tFree blocks: " << calcFreeBlocks() << std::endl;
+    std::cout << "\t\tAllocated blocks: " << nrOfAllocBlocks << std::endl;
+    std::cout << "\tAverage block size: " << calcAvgBlockSize() << std::endl;
+    std::cout << "***********************************************" << std::endl;
 
 }
 

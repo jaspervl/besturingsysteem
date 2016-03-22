@@ -56,13 +56,26 @@ class PowerOfTwo : public Allocator
 		/// Total number of free blocks
 		inline int 	calcFreeBlocks() {
 			int counter = 0;
-			for(auto it : available_areas){
+			for(auto it : available_areas) {
 				for (auto a : it) {
 					++counter;
 				}
 			}
 			return counter;
 		};
+
+		/// Calc average block size
+		inline int		calcAvgBlockSize() {
+			int counter = 0;
+			int totalsize = 0;
+			for(auto it : available_areas) {
+				for (auto a : it) {
+					totalsize += (*a).getSize();
+					++counter;
+				}
+			}
+			return (totalsize/counter);
+		}
 
         /// For debugging this function shows the free area list
         void		dump();

@@ -244,14 +244,14 @@
 1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.h
 	"NextFit.h"
 
-1458678991 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
+1458679177 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
 	"PowerOfTwo.h"
 	"ansi.h"
 	"math.h"
 	<vector>
 	<iostream>
 
-1458679009 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
+1458679311 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
 	"Allocator.h"
 	<vector>
 	"math.h"
