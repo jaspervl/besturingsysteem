@@ -39,13 +39,25 @@ class PowerOfTwo : public Allocator
         void    	report();
 
 		/// Return the absolute maximum memory block size for this instance.
-        const inline int 	getMaxBlockSize() { return pow (2, (MIN_SIZE + available_areas.size() -1)); };
+        const inline int 	getMaxBlockSize()
+        {
+        	int index = available_areas.size() -1;
+			for (auto it = available_areas.rbegin() ; it != available_areas.rend(); ++it) {
+				if (it -> size() > 0) {
+					return pow(2, (MIN_SIZE + index));
+				}
+				index--;
+			}
+        };
 
 
     private:
 
         /// Define the minimal size of the area ( ex : 1  is 2^1 = 2  || 2 is  2 ^ 2 = 4 ...)
         const int  	MIN_SIZE = 5;
+
+        /// Size of the allocator that combines free and allocated spaces.
+        int 		totalSize;
 
         /// List of all the available free areas, define as nul pointers for initialization and safety precautions
         std::vector<std::vector<Area*>> available_areas;

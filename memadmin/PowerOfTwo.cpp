@@ -37,6 +37,7 @@ void  PowerOfTwo::setSize(int new_size)
         for(int i = 0; i < arrSize;i++){
             available_areas.push_back(*new std::vector<Area*>);
         }
+        totalSize = new_size;
     }
 	// The given new_size does not fit inside our MIN_SIZE, thus a exception is thrown.
     else {
@@ -136,10 +137,12 @@ void	PowerOfTwo::free(Area *ap)
 void PowerOfTwo::report(){
     std::cout << "***********************************************" << std::endl;
     std::cout << "Power of Two stats: " << std::endl;
-    std::cout << "\tTotal size: " << size  << ", max block size: " << getMaxBlockSize() << std::endl;
+    std::cout << "\tTotal size: " << totalSize  << ", max block size: " << getMaxBlockSize() << std::endl;
     std::cout << "\tNumber of blocks total: " << calcFreeBlocks() + nrOfAllocBlocks << std::endl;
-    std::cout << "\t\tFree blocks: " << calcFreeBlocks() << std::endl;
-    std::cout << "\t\tAllocated blocks: " << nrOfAllocBlocks << std::endl;
+    std::cout << "\tFree blocks: " << calcFreeBlocks() << std::endl;
+    std::cout << "\t\tFree blocks cumulatively size: " << size << std::endl;
+    std::cout << "\tAllocated blocks: " << nrOfAllocBlocks << std::endl;
+    std::cout << "\t\tAllocated blocks cumulatively size: " << totalSize - size << std::endl;
     std::cout << "\tAverage block size: " << calcAvgBlockSize() << std::endl;
     std::cout << "\tAllocation is called: " << nrOfAllocations << " times" << std::endl;
     std::cout << "\tFree is called: " << nrOfFrees <<  " times" << std::endl;
