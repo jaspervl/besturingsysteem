@@ -1,152 +1,4 @@
 # depslib dependency file v1.0
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\allocator.cc
-	"main.h"
-	"Allocator.h"
-
-1458046375 c:\users\jasper\desktop\besturingsysteem\memadmin\main.h
-	<iostream>
-	"common.h"
-	"ansi.h"
-	"asserts.h"
-	"Area.h"
-	"Allocator.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\common.h
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\ansi.h
-	"common.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\asserts.h
-	"where.h"
-	"assert_error.h"
-
-1458046375 c:\users\jasper\desktop\besturingsysteem\memadmin\where.h
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\assert_error.h
-	<stdexcept>
-
-1458055032 c:\users\jasper\desktop\besturingsysteem\memadmin\area.h
-	<iostream>
-	"asserts.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\allocator.h
-	"Area.h"
-
-1458662333 source:c:\users\jasper\desktop\besturingsysteem\memadmin\application.cc
-	<cstdlib>
-	"main.h"
-	"Stopwatch.h"
-	"Application.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\stopwatch.h
-	<sys/resource.h>
-	<sys/times.h>
-	<times.h>
-	<time.h>
-	<sys/time.h>
-	<windows.h>
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\application.h
-	<list>
-	"Allocator.h"
-	"Area.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\area.cc
-	"asserts.h"
-	"Area.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\assert_error.cc
-	<string>
-	<sstream>
-	"assert_error.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\firstfit.cc
-	"FirstFit.h"
-	"ansi.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\firstfit.h
-	"Fitter.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\fitter.h
-	<list>
-	"Allocator.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\firstfit2.cc
-	"FirstFit2.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\firstfit2.h
-	"FirstFit.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\fitter.cc
-	<cmath>
-	"ansi.h"
-	"Fitter.h"
-
-1458659775 source:c:\users\jasper\desktop\besturingsysteem\memadmin\main.cc
-	<vector>
-	<cstdlib>
-	<getopt.h>
-	"main.h"
-	"RandomFit.h"
-	"FirstFit.h"
-	"FirstFit2.h"
-	"NextFit.h"
-	"NextFit2.h"
-	"PowerOfTwo.h"
-	"Application.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\randomfit.h
-	"Allocator.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\nextfit.h
-	"Fitter.h"
-
-1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\nextfit2.h
-	"NextFit.h"
-
-1458657669 c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.h
-	"Allocator.h"
-	<vector>
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\nextfit.cc
-	"main.h"
-	"NextFit.h"
-	"ansi.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\nextfit2.cc
-	"NextFit2.h"
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\randomfit.cc
-	"main.h"
-	"RandomFit.h"
-	<cstdlib>
-
-1458046371 source:c:\users\jasper\desktop\besturingsysteem\memadmin\stopwatch.cc
-	<iostream>
-	<cstdio>
-	"asserts.h"
-	"Stopwatch.h"
-	<unistd.h>
-	<time.h>
-
-1458046375 source:c:\users\jasper\desktop\besturingsysteem\memadmin\unix_error.cc
-	<cstring>
-	<cerrno>
-	<sstream>
-	"unix_error.h"
-
-1458046375 c:\users\jasper\desktop\besturingsysteem\memadmin\unix_error.h
-	<stdexcept>
-	<string>
-	"where.h"
-
-1458663075 source:c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.cpp
-	"PowerOfTwo.h"
-	"ansi.h"
-	<math.h>
-	<vector>
-	<iostream>
-
 1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.cc
 	"main.h"
 	"Allocator.h"
@@ -180,7 +32,7 @@
 1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.h
 	"Area.h"
 
-1458679906 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\application.cc
+1458684529 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\application.cc
 	<cstdlib>
 	"main.h"
 	"Stopwatch.h"
@@ -230,39 +82,52 @@
 	"ansi.h"
 	"Fitter.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.cc
+1458686003 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\main.cc
+	<vector>
+	<cstdlib>
+	<getopt.h>
 	"main.h"
+	"RandomFit.h"
+	"FirstFit.h"
+	"FirstFit2.h"
 	"NextFit.h"
-	"ansi.h"
+	"NextFit2.h"
+	"PowerOfTwo.h"
+	"Application.h"
+
+1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.h
+	"Allocator.h"
 
 1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.h
 	"Fitter.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.cc
-	"NextFit2.h"
-
 1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.h
 	"NextFit.h"
-
-1458683872 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
-	"PowerOfTwo.h"
-	"ansi.h"
-	"math.h"
-	<vector>
-	<iostream>
 
 1458683262 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
 	"Allocator.h"
 	<vector>
 	"math.h"
 
+1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.cc
+	"main.h"
+	"NextFit.h"
+	"ansi.h"
+
+1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.cc
+	"NextFit2.h"
+
+1458684675 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
+	"PowerOfTwo.h"
+	"ansi.h"
+	"math.h"
+	<vector>
+	<iostream>
+
 1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.cc
 	"main.h"
 	"RandomFit.h"
 	<cstdlib>
-
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.h
-	"Allocator.h"
 
 1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\stopwatch.cc
 	<iostream>
@@ -282,17 +147,4 @@
 	<stdexcept>
 	<string>
 	"where.h"
-
-1458675813 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\main.cc
-	<vector>
-	<cstdlib>
-	<getopt.h>
-	"main.h"
-	"RandomFit.h"
-	"FirstFit.h"
-	"FirstFit2.h"
-	"NextFit.h"
-	"NextFit2.h"
-	"PowerOfTwo.h"
-	"Application.h"
 
