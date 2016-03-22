@@ -132,6 +132,7 @@ void	PowerOfTwo::free(Area *ap)
     --nrOfAllocBlocks;
 }
 
+/// Report some statistics about the current state and history of this allocator.
 void PowerOfTwo::report(){
     std::cout << "***********************************************" << std::endl;
     std::cout << "Power of Two stats: " << std::endl;
