@@ -82,7 +82,7 @@ void	PowerOfTwo::dump()
 Area  *PowerOfTwo::alloc(int wanted)
 {
     require(wanted > 0);
-    require(wanted <= size);
+    require(wanted <= getMaxBlockSize());
 
 	// Bitshift till the wanted size fits the block.
     int index = 0;
@@ -103,6 +103,7 @@ Area  *PowerOfTwo::alloc(int wanted)
                 --i;
             }
             // Return the perfect matching area.
+            ++nrOfAllocBlocks;
             return area;
         }
     }
@@ -125,19 +126,16 @@ void	PowerOfTwo::free(Area *ap)
 
 	// Push the freed Area on the back of the vertex with corresponding size.
     available_areas.at(index).push_back(ap);
-}
-
-/// Update statistics
-void	PowerOfTwo::updateStats()
-{
-	// TODO
-	//	++qcnt;									// number of 'alloc's
-	//	qsum  += areas.size();					// length of resource map
-	//	qsum2 += (areas.size() * areas.size());	// same: squared
+    --nrOfAllocBlocks;
 }
 
 void PowerOfTwo::report(){
-	// TODO
+    std::cout << "Power of Two stats: " << std::endl;
+    std::cout << "\tTotal size: " << size  << ", max block size: " << getMaxBlockSize() << std::endl;
+    std::cout << "\tNumber of blocks total: " << calcFreeBlocks() + nrOfAllocBlocks << std::endl;
+    std::cout << "\tNumber of free blocks: " << calcFreeBlocks() << std::endl;
+    std::cout << "\tNumber of allocated blocks: " << nrOfAllocBlocks << std::endl;
+
 }
 
 // vim:sw=4:ai:aw:ts=4:

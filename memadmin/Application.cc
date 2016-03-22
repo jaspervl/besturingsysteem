@@ -248,6 +248,7 @@ void	Application::testing()
 								<< failed_steps << " errors" AA_RESET "\n";
 					else
 						cerr << AC_GREEN "Einde code testen, alles OKE" AA_RESET "\n";
+						beheerder->report();
 					fase = -1;		// einde test loop
 					tflag = false;	// Puur "voor het geval dat"
 					break;

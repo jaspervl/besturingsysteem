@@ -39,26 +39,33 @@ class PowerOfTwo : public Allocator
         void    	report();
 
 		/// Return the absolute maximum memory block size for this instance.
-        inline int 	getMaxBlockSize() { return pow (2, MIN_SIZE + available_areas.size()); };
+        const inline int 	getMaxBlockSize() { return pow (2, (MIN_SIZE + available_areas.size() -1)); };
 
 
     private:
 
-        /// List of all the available free areas, define as nul pointers for initialization and safety precautions
-        std::vector<std::vector<Area*>> available_areas;
-
         /// Define the minimal size of the area ( ex : 1  is 2^1 = 2  || 2 is  2 ^ 2 = 4 ...)
         const int  	MIN_SIZE = 5;
 
+        /// List of all the available free areas, define as nul pointers for initialization and safety precautions
+        std::vector<std::vector<Area*>> available_areas;
+
+        /// The current number of allocated blocks
+        int 		nrOfAllocBlocks = 0;
+
+		/// Total number of free blocks
+		inline int 	calcFreeBlocks() {
+			int counter = 0;
+			for(auto it : available_areas){
+				for (auto a : it) {
+					++counter;
+				}
+			}
+			return counter;
+		};
+
         /// For debugging this function shows the free area list
         void		dump();
-
-        /// This is the actual function that searches for space.
-        /// @returns	An area or 0 if not enough freespace available
-        Area 		*searcher(int);
-
-		/// update resource map statistics
-        void		updateStats();
 };
 
 #endif // POWEROFTWO_H
