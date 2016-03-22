@@ -184,7 +184,9 @@ void	Application::testing()
 			cerr << "Stap " << (++fase) << ":\n";
 			switch (fase) {
 				case 1:
+					/// CUSTOM
 					expectError = true;
+					/// END CUSTOM
 					cerr << "Om niets vragen ...\n";
 					vraagGeheugen(0);   		// dit mag niet kunnen ...
 					// ... maar de controle heeft gefaald
@@ -193,7 +195,9 @@ void	Application::testing()
 					cerr << "Stap " << (++fase) << ":\n";
 					/*FALLTHRU*/				// ga door naar de volgende test
 				case 2:
+					/// CUSTOM
 					expectError = true;
+					/// END CUSTOM
 					cerr << "Te veel vragen ...\n";
 					vraagGeheugen(size + 1);	// dit mag niet kunnen ...
 					// ... maar de controle heeft gefaald
@@ -202,7 +206,9 @@ void	Application::testing()
 					cerr << "Stap " << (++fase) << ":\n";
 					/*FALLTHRU*/				// ga door naar de volgende test
 				case 3:
+					/// CUSTOM
 					expectError = true;
+					/// END CUSTOM
 					cerr << "Te weinig vragen ...\n";
 					vraagGeheugen(-1);
 					cerr << AC_RED "TEST FAILED" AA_RESET "\n";
@@ -233,7 +239,9 @@ void	Application::testing()
 					ap = beheerder->alloc(size / 2);	// dit moet altijd kunnen
 					bp = new Area(*ap);					// dupliceer ap
 					beheerder->free(ap);				// het origineel vrij geven
+					/// CUSTOM
 					expectError = true;
+					/// END CUSTOM
 					beheerder->free(bp);				// en de kopie vrij geven
 						// NB This test may cause a memory leak if
 						// 'beheerder->free' does not delete 'bp'
@@ -255,8 +263,10 @@ void	Application::testing()
 			}
 		} catch (const std::logic_error& error) {
 			cerr << error.what() << endl;
+			/// CUSTOM
 			expectError ? cerr << AC_GREEN "OKE, TEST SUCCEEDED" AA_RESET "\n": cerr << AC_RED "TEST FAILED" AA_RESET "\n";
 			expectError = false;
+			/// END CUSTOM
 		}
 	}//while fase
 }
