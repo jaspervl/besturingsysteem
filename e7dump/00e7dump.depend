@@ -1,0 +1,73 @@
+# depslib dependency file v1.0
+1453197642 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\assert_error.cc
+	<string>
+	<sstream>
+	"assert_error.h"
+
+1448444482 c:\users\enjee\documents\github\besturingsysteem\e7dump\assert_error.h
+	<stdexcept>
+
+1458688181 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\block.cc
+	"asserts.h"
+	"endian.h"
+	"Block.h"
+
+1453197920 c:\users\enjee\documents\github\besturingsysteem\e7dump\asserts.h
+	"where.h"
+	"assert_error.h"
+
+1453197868 c:\users\enjee\documents\github\besturingsysteem\e7dump\where.h
+
+1458688230 c:\users\enjee\documents\github\besturingsysteem\e7dump\block.h
+	<string>
+	"e7types.h"
+	"e7const.h"
+	"e7filsys.h"
+	"e7fblk.h"
+	"e7ino.h"
+	"e7dir.h"
+
+1448874478 c:\users\enjee\documents\github\besturingsysteem\e7dump\e7types.h
+	<cstdint>
+
+1423260580 c:\users\enjee\documents\github\besturingsysteem\e7dump\e7const.h
+
+1423260898 c:\users\enjee\documents\github\besturingsysteem\e7dump\e7filsys.h
+	"e7types.h"
+
+1423234122 c:\users\enjee\documents\github\besturingsysteem\e7dump\e7fblk.h
+	"e7types.h"
+	"e7filsys.h"
+
+1448873524 c:\users\enjee\documents\github\besturingsysteem\e7dump\e7ino.h
+	"e7types.h"
+
+1448873516 c:\users\enjee\documents\github\besturingsysteem\e7dump\e7dir.h
+	"e7types.h"
+
+1448444744 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\cstr.cc
+	"cstr.h"
+
+1423260570 c:\users\enjee\documents\github\besturingsysteem\e7dump\cstr.h
+	<ostream>
+
+1448637468 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\device.cc
+	"asserts.h"
+	"unix_error.h"
+	<fcntl.h>
+	<unistd.h>
+	<sys/stat.h>
+	<cstdio>
+	"Block.h"
+	"Device.h"
+	"e7const.h"
+
+1454613056 c:\users\enjee\documents\github\besturingsysteem\e7dump\unix_error.h
+	<stdexcept>
+	<string>
+	"where.h"
+
+1458688236 c:\users\enjee\documents\github\besturingsysteem\e7dump\device.h
+	<map>
+	"e7types.h"
+

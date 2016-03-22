@@ -88,7 +88,7 @@ public:
 	void		l3tol(daddr_x dst[NADDR], byte src[3*NADDR]);
 
 protected:
-
+	#define ulong unsigned long
 	/** Block usage counter.
 	 * Keeps track of how often this block is being used at the same time.
 	 * Incremented by Device.getBlock() when you ask for a Block.

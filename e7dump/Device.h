@@ -50,7 +50,7 @@ public:
 	~Device();
 
 private:
-
+	#define ulong unsigned long
 	int			fd;				// the handle to the unix filedescriptor
 	daddr_x		dev_limit;		// the upperlimit to the device size (or 0)
 
