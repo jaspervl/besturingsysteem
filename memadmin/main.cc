@@ -243,8 +243,13 @@ int  main(int argc, char *argv[])
 		for (Allocator* beheerder : beheerders)
 		{
 			// Stel de geheugen-beheerder in ..
-			beheerder->setSize(500);
-			//beheerder->alloc(size / 2);
+			beheerder->setSize(2047);
+			beheerder->alloc(74);
+			beheerder->alloc(74);
+			beheerder->free(new Area(10000,256));
+			beheerder->free(new Area(100300,512));
+			beheerder->free(new Area(100300,512));
+			beheerder->free(new Area(100300,512));
 //			beheerder->setCheck(cflag);
 //
 //			// ... en maak dan een pseudo-applicatie met die beheerder

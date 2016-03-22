@@ -32,7 +32,7 @@ void  PowerOfTwo::setSize(int new_size)
         int arrSize = index - MIN_SIZE + 1;
         std::cout << "VALUE" << arrSize << std::endl;
         for(int i = 0; i < arrSize;i++){
-            available_areas.push_back(new std::vector<Area*>);
+            available_areas.push_back(*new std::vector<Area*>);
         }
         std::cout << available_areas.size();
 
@@ -56,11 +56,13 @@ void  PowerOfTwo::setSize(int new_size)
 	for (int i = index; i >= MIN_SIZE;i--) {
         int block = pow(2,i);
 		if(new_size - block >= 0){
-           // available_areas[i].push_back(new Area(available_size,block));
+            available_areas.at(i - MIN_SIZE).push_back(new Area(available_size,block));
             available_size += block;
 		}
 
 	}
+
+	dump();
 
 	Allocator::setSize(available_size);
 
@@ -69,7 +71,16 @@ void  PowerOfTwo::setSize(int new_size)
 // Print the current freelist for debugging
 void	PowerOfTwo::dump()
 {
-
+    int i = 0;
+    std::cout << "ENTERING DUMP" << std::endl;
+    for(auto it : available_areas){
+            std::cout << "#" << i << ": ";
+        for(auto x : it){
+            std::cout << *x << ", ";
+        }
+            std::cout << std::endl;
+            i++;
+    }
 }
 
 
@@ -85,7 +96,7 @@ Area  *PowerOfTwo::alloc(int wanted)
         ++index;
     }
     std::cout << "TRES" << std::endl;
-    for(int i = index;i != available_areas ->size();i++){
+    for(int i = index;i != available_areas.size();i++){
         if(available_areas[i].size() > 0){
             Area* area = available_areas[i].back();
             available_areas[i].pop_back();
@@ -95,6 +106,7 @@ Area  *PowerOfTwo::alloc(int wanted)
                 available_areas[i - 1].push_back(area -> split((01 << (MIN_SIZE + i)) / 2));
                 --i;
             }
+            dump();
             return area;
         }
     }
@@ -105,14 +117,8 @@ Area  *PowerOfTwo::alloc(int wanted)
 // Application returns an area no longer needed
 void	PowerOfTwo::free(Area *ap)
 {
-//	require(ap != 0);
-//	if (cflag) {
-//		// EXPENSIVE: check for overlap with all registered free areas
-//		for(ALiterator  i = areas.begin() ; i != areas.end() ; ++i) {
-//			check(!ap->overlaps(*i));    // the sanity check
-//		}
-//	}
-//	areas.push_back(ap);	// add discarded "old" object to the end of free list
+    available_areas.at(log2(ap ->getSize()) - MIN_SIZE).push_back(ap);
+    dump();
 }
 
 
@@ -123,7 +129,7 @@ Area  *PowerOfTwo::searcher(int wanted)
 {
 	require(wanted > 0);		// has to be "something",
 	require(wanted <= size);	// but not more than can exist,
-	require(!available_areas ->empty());	// provided we do have something to give
+	//require(!available_areas ->empty());	// provided we do have something to give
 
 	// Search thru all available areas
 //	for(ALiterator  i = areas.begin() ; i != areas.end() ; ++i) {

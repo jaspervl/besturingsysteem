@@ -82,7 +82,7 @@
 	"ansi.h"
 	"Fitter.h"
 
-1458653723 source:c:\users\jasper\desktop\besturingsysteem\memadmin\main.cc
+1458658671 source:c:\users\jasper\desktop\besturingsysteem\memadmin\main.cc
 	<vector>
 	<cstdlib>
 	<getopt.h>
@@ -104,7 +104,7 @@
 1458046371 c:\users\jasper\desktop\besturingsysteem\memadmin\nextfit2.h
 	"NextFit.h"
 
-1458655873 c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.h
+1458657669 c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.h
 	"Allocator.h"
 	<vector>
 
@@ -140,7 +140,7 @@
 	<string>
 	"where.h"
 
-1458655086 source:c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.cpp
+1458658704 source:c:\users\jasper\desktop\besturingsysteem\memadmin\poweroftwo.cpp
 	"PowerOfTwo.h"
 	"ansi.h"
 	<math.h>
