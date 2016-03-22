@@ -209,9 +209,16 @@ int  main(int argc, char *argv[])
 			// Stel de geheugen-beheerder in ...
 			beheerder->setSize(size);
 			beheerder->setCheck(cflag);
-
+			Application  *mp;
 			// ... en maak dan een pseudo-applicatie met die beheerder
-			Application  *mp = new Application(beheerder, size);
+			/// CUSTOM
+			if (PowerOfTwo* po2 = dynamic_cast<PowerOfTwo*>(beheerder)) {
+				// Beheerder is power of 2 algoritme. Geef als maximum grootte de maximale block grootte mee.
+				mp = new Application(beheerder, po2 -> getMaxBlockSize());
+			} else {
+				mp = new Application(beheerder, size);
+			}
+			/// END CUSTOM
 
 			if (tflag) {    // De -t optie gezien ?
 				cout << AC_BLUE "Testing " << beheerder->getType()

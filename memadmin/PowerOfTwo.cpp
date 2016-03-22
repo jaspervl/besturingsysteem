@@ -8,7 +8,7 @@
 
 #include "PowerOfTwo.h"
 #include "ansi.h"
-#include <math.h>
+#include "math.h"
 #include <vector>
 #include <iostream>
 

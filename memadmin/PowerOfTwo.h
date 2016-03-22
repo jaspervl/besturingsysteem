@@ -10,6 +10,7 @@
 
 #include "Allocator.h"
 #include <vector>
+#include "math.h"
 
 
 /// @class PowerOfTwo
@@ -25,16 +26,21 @@ class PowerOfTwo : public Allocator
         ~PowerOfTwo();
 
 		/// initialize memory size
-        void	 setSize(int new_size);
+        void	 	setSize(int new_size);
 
         /// Ask for an area of at least 'wanted' units
         /// @returns	An area or 0 if not enough freespace available
-        Area	*alloc(int wanted);
+        Area		*alloc(int wanted);
 
         /// The application returns an area to freespace
         /// @param ap	The area returned to free space
-        void	free(Area *ap);
-        void    report();
+        void		free(Area *ap);
+
+        void    	report();
+
+		/// Return the absolute maximum memory block size for this instance.
+        inline int 	getMaxBlockSize() { return pow (2, MIN_SIZE + available_areas.size()); };
+
 
     private:
 
@@ -42,17 +48,17 @@ class PowerOfTwo : public Allocator
         std::vector<std::vector<Area*>> available_areas;
 
         /// Define the minimal size of the area ( ex : 1  is 2^1 = 2  || 2 is  2 ^ 2 = 4 ...)
-        const int  MIN_SIZE = 5;
+        const int  	MIN_SIZE = 5;
 
         /// For debugging this function shows the free area list
-        void	dump();
+        void		dump();
 
         /// This is the actual function that searches for space.
         /// @returns	An area or 0 if not enough freespace available
-        Area 	*searcher(int);
+        Area 		*searcher(int);
 
 		/// update resource map statistics
-        void	updateStats();
+        void		updateStats();
 };
 
 #endif // POWEROFTWO_H

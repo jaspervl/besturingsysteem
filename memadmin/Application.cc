@@ -208,7 +208,7 @@ void	Application::testing()
 				case 4:
 					cerr << "Om alles vragen ...\n";
 					++failed_steps;
-					vraagGeheugen(size);   			// PAS OP: dit mag dus wel!
+					vraagGeheugen(size/2);   			// PAS OP: dit mag dus wel!
 					// Zou geen problemen mogen geven
 					--failed_steps;
 					cerr << AC_GREEN "OKE, TEST SUCCEEDED" AA_RESET "\n";
@@ -220,7 +220,7 @@ void	Application::testing()
 					vergeetOudste(); 				// geheugen van stap 4 weer vrijgeven
 					// Zou geen problemen mogen geven
 					--failed_steps;
-					cerr << AC_GREEN "OKE, TEST SUCCEEDED PROPERLY" AA_RESET "\n";
+					cerr << AC_GREEN "OKE, TEST SUCCEEDED" AA_RESET "\n";
 					cerr << "Stap " << (++fase) << ":\n";
 					/*FALLTHRU*/
 				case 6:
@@ -249,7 +249,7 @@ void	Application::testing()
 			}
 		} catch (const std::logic_error& error) {
 			cerr << error.what() << endl;
-			cerr << AC_GREEN "OKE, TEST SUCCEEDED (Except for test 5)" AA_RESET "\n";
+			cerr << AC_GREEN "OKE, TEST SUCCEEDED (Error)" AA_RESET "\n";
 		}
 	}//while fase
 }
