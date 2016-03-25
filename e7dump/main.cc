@@ -1,64 +1,85 @@
-/** @file 1.voorbeeld.cc
- *	Dump some information from a 7-th edition filesystem.
+/** @file 1.main.cc
+ *	Dump information about a file with the 7th edition of Unix filesystem.
+ *  @author Jasper van Lierop
+ *  @author Niels Jan van de Pol
+ *	@specialThanks Casper Halleriet & Sjoerd de Vries for helping us with some problems.
  */
+// Include streams.
+#include <iostream>
+#include <fstream>
+#include <sstream>
+// Include custom classes.
 #include "ansi.h"
 #include "asserts.h"
 #include "unix_error.h"
 #include "cstr.h"
+#include "Device.h"
+#include "Block.h"
+// Include other libraries.
 #include <ctime>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <vector>
-#include "Device.h"
-#include "Block.h"
 #include "math.h"
 
-void	printSuperblock(Device&);
-void	printRootinode(Device&);
-void	registerBlocks(Device&, daddr_x[], off_x);
-void    printIndirectionBlock(Device&, Block*, int, int);
+// Constant spacer string.
+const std::string spacer = "****************************************\n";
 
-std::string arrayToString(int[], int);
-std::string unsignedArrayToString(uint16_t[], int);
+// Instance of attributes.
 std::ofstream file;
 int blockSize;
 
+// Define some methods for later use.
+std::string arrayToStringNAAMVERANDEREN(int[], int);
+std::string unsignedarrayToStringNAAMVERANDEREN(uint16_t[], int);
+void	retrieveSuperBlock(Device&);
+void	retrieveRootInode(Device&);
+void    nogGoedeNaamGeven(Device&, Block*, int, int);
 
-// Dump some information from the given "device"
+///****************************************************
+/// Dump some information from the given "device",
+/// Will be called first by main method.
+///****************************************************
 void	dump(const char* floppie)
 {
-    file.open("JasperEnJee.txt");
+	// Open output file.
+    file.open("floppieDump.txt");
 
+	// Write first line to file.
+	file << "Opening: \"" << floppie << "\"." << std::endl;
+	file << spacer;
 
-	file << "Opening device '" << floppie << "'" << std::endl;
-	file << "----------------------------------------" << std::endl;
-
-	Device  device(floppie);	// A device instance
-	printSuperblock(device);
-	printRootinode(device);
+    // Init device with floppie file.
+	Device device(floppie);
+	// Retrieve information about the superblock with the floppie.
+	retrieveSuperBlock(device);
+	// Retrieve the information about the inodes with the floppie.
+	retrieveRootInode(device);
+	// Close and finish the output file.
 	file.close();
 }
 
-void	printSuperblock(Device& device)
+///****************************************************
+/// TODO
+///
+///****************************************************
+void	retrieveSuperBlock(Device& device)
 {
     // Fetch the block containing the super-block
 	Block*  sp = device.getBlock(SUPERB);
 
 	file << "Dump of superblock on volume: " << cstr(sp->u.fs.s_fname,6) << "." <<cstr(sp->u.fs.s_fpack,6) << std::endl;
-	file << "----------------------------------------" << std::endl;
+	file << spacer;
 
     file << "userdata area starts in block: " << sp->u.fs.s_isize <<std::endl;
     file << "number of blocks on this volume is: " << sp->u.fs.s_fsize <<std::endl;
 
     file << "Number of free blocks: " << sp->u.fs.s_nfree << std::endl;
-    file << arrayToString(sp->u.fs.s_free, sp->u.fs.s_nfree);
+    file << arrayToStringNAAMVERANDEREN(sp->u.fs.s_free, sp->u.fs.s_nfree);
 
     //TODO hulpmethode voor for loop
     file << "Number of free inodes: " << sp->u.fs.s_ninode << std::endl;
-    file << unsignedArrayToString(sp->u.fs.s_inode, sp->u.fs.s_ninode);
+    file << unsignedarrayToStringNAAMVERANDEREN(sp->u.fs.s_inode, sp->u.fs.s_ninode);
 
 
 
@@ -75,27 +96,48 @@ void	printSuperblock(Device& device)
 	file << "File system name: " << cstr(sp->u.fs.s_fname, 6) << std::endl;
 	file << "File system pack: " << cstr(sp->u.fs.s_fpack, 6) << std::endl;
 
-	file << "----------------------------------------" << std::endl;
+	file << spacer;
 	file << "Rest of free list continues in block " <<  sp->u.fs.s_free[0]<< std::endl;
-	file << "----------------------------------------" << std::endl;
+	file << spacer;
 
 	Block* bl = device.getBlock(sp->u.fs.s_free[0]);
 
 	file << "Freeblock " << sp->u.fs.s_free[0] << ": " << bl->u.fb.df_nfree << std::endl;
-	file << arrayToString(bl->u.fb.df_free, bl->u.fb.df_nfree) << std::endl;
+	file << arrayToStringNAAMVERANDEREN(bl->u.fb.df_free, bl->u.fb.df_nfree) << std::endl;
 
     while (bl->u.fs.s_free[-1] != 0){
         file << "Freeblock " << bl->u.fs.s_free[-1] << ": " << bl->u.fb.df_nfree << std::endl;
         bl->release();
         bl = device.getBlock(bl->u.fs.s_free[-1]);
-        file << arrayToString(bl->u.fb.df_free, bl->u.fb.df_nfree) << std::endl;
+        file << arrayToStringNAAMVERANDEREN(bl->u.fb.df_free, bl->u.fb.df_nfree) << std::endl;
     }
 
     bl->release();
     sp->release();	// We no longer need the super block
 }
 
-std::string  arrayToString(int array[], int stopCondition){
+///****************************************************
+/// TODO
+///
+///****************************************************
+std::string  arrayToStringNAAMVERANDEREN(int array[], int stopCondition)
+{
+    std::stringstream ss;
+    for (int i = 0; i < stopCondition; i++)
+    {
+        ss << array[i] << ' ';
+    }
+    ss << std::endl;
+
+    return ss.str();
+}
+
+///****************************************************
+/// TODO
+///
+///****************************************************
+std::string  unsignedarrayToStringNAAMVERANDEREN(uint16_t array[], int stopCondition)
+{
     std::stringstream ss;
     for (int i = 0; i < stopCondition; i++)
     {
@@ -106,33 +148,24 @@ std::string  arrayToString(int array[], int stopCondition){
     return ss.str();
 
 }
-std::string  unsignedArrayToString(uint16_t array[], int stopCondition){
-    std::stringstream ss;
-    for (int i = 0; i < stopCondition; i++)
-    {
-        ss << array[i] << ' ';
-    }
-    ss << std::endl;
 
-    return ss.str();
-
-}
-
-
-
-void	printRootinode(Device& device)
+///****************************************************
+/// TODO
+///
+///****************************************************
+void	retrieveRootInode(Device& device)
 {
 	// - - - - - - - - - - - - -
 	// read INODE's from disk
 	// Also see: e7ino.h
 	// - - - - - - - - - - - - -
     Block*  ip_x = device.getBlock( SUPERB );
-    file << "----------------------------------------" << std::endl;
+    file << spacer;
 
     ino_x	ninode = (ip_x->u.fs.s_isize - 2) * INOPB;
 	file << "Examining " << ninode << " inodes" << std::endl;
 
-    file << "----------------------------------------" << std::endl;
+    file << spacer;
 
     for(ino_x  inum = 1; inum < ninode; ++inum) {
         // Fetch the block containing the root inode
@@ -208,7 +241,7 @@ void	printRootinode(Device& device)
                                     file << std::endl;
                                     file << "Block number in level " << ++level << " indirection block " << diskaddrs[i] << ": ";
                                     Block* bl = device.getBlock(diskaddrs[i]);
-                                    printIndirectionBlock(device, bl, level-1, blockSize);
+                                    nogGoedeNaamGeven(device, bl, level-1, blockSize);
                                     bl->release();
                                 }
                             }
@@ -224,7 +257,12 @@ void	printRootinode(Device& device)
 	ip_x->release();	// We no longer need this inode block
 }
 
-void printIndirectionBlock(Device& device, Block* bl, int lvl, int size){
+///****************************************************
+/// TODO
+///
+///****************************************************
+void nogGoedeNaamGeven(Device& device, Block* bl, int lvl, int size)
+{
 
     for(int j = 0; j < NINDIR; ++j){
         if(blockSize == 0){
@@ -246,7 +284,7 @@ void printIndirectionBlock(Device& device, Block* bl, int lvl, int size){
                 blockSize = blockSize-pow(128, lvl);
             } else if(temp != 0 && lvl > 0){
                 Block* block = device.getBlock(temp);
-                printIndirectionBlock(device, block , lvl -1, blockSize);
+                nogGoedeNaamGeven(device, block , lvl -1, blockSize);
                 block->release();
             } else {
                 --blockSize;
