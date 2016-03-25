@@ -71,18 +71,21 @@
 	<map>
 	"e7types.h"
 
-1458688181 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\main.cc
+1458920980 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\main.cc
 	"ansi.h"
 	"asserts.h"
 	"unix_error.h"
 	"cstr.h"
-	<iostream>
 	<ctime>
+	<cstdio>
 	<cstdlib>
-	<unistd.h>
-	<fcntl.h>
+	<iostream>
+	<fstream>
+	<sstream>
+	<vector>
 	"Device.h"
 	"Block.h"
+	"math.h"
 
 1423260298 c:\users\enjee\documents\github\besturingsysteem\e7dump\ansi.h
 	"common.h"
@@ -94,4 +97,6 @@
 	<cerrno>
 	<sstream>
 	"unix_error.h"
+
+1458689110 source:c:\users\enjee\documents\github\besturingsysteem\e7dump\charter.cc
 

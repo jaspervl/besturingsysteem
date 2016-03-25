@@ -38,6 +38,7 @@ You'll have to write your own main.cc this time.]]>
 		</Compiler>
 		<Unit filename="Block.cc" />
 		<Unit filename="Block.h" />
+		<Unit filename="Charter.cc" />
 		<Unit filename="Device.cc" />
 		<Unit filename="Device.h" />
 		<Unit filename="ansi.h" />

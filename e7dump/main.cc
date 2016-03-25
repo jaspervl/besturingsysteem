@@ -1,158 +1,276 @@
-// -----------------------------------------------------
-/** @file main.cc
- * This is the program that you have to finish.
+/** @file 1.voorbeeld.cc
+ *	Dump some information from a 7-th edition filesystem.
  */
-// -----------------------------------------------------
+#include "ansi.h"
+#include "asserts.h"
+#include "unix_error.h"
+#include "cstr.h"
+#include <ctime>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include "Device.h"
+#include "Block.h"
+#include "math.h"
 
-// Our own includes
-#include "ansi.h"		// for: ansi color code strings
-#include "asserts.h"	// for: notreached() e.a.
-#include "unix_error.h"	// for: the unix_error() exception class
-#include "cstr.h"		// for: the cstr() wrapper and it's output operator
+void	printSuperblock(Device&);
+void	printRootinode(Device&);
+void	registerBlocks(Device&, daddr_x[], off_x);
+void    printIndirectionBlock(Device&, Block*, int, int);
 
-// C/C++/STL specific
-#include <iostream>	    // for: std::cout, std::endl
-#include <ctime>		// for: ctime()
-#include <cstdlib>		// for: EXIT_SUCCESS, EXIT_FAILURE
-#include <unistd.h>		// for: close() etc
-#include <fcntl.h>		// for: O_WRONLY etc
-
-// Printf import
-#include <stdio.h>
-
-// Our own classes
-#include "Device.h"		// the "device driver"
-#include "Block.h"		// the "data blocks"
+std::string arrayToString(int[], int);
+std::string unsignedArrayToString(uint16_t[], int);
+std::ofstream file;
+int blockSize;
 
 
-
-// ================================================================
-// a few "forward declarations"
-void    printSuperblock(Device&);
-void    printRootinode(Device&);
-// ================================================================
-
-/// Dump function that starts the floppie dumping.
-void	dump( const char* floppie )
+// Dump some information from the given "device"
+void	dump(const char* floppie)
 {
-    std::cout << "Opening device '" << floppie << "'" << std::endl;
-    Device  device(floppie);    // A device instance
+    file.open("JasperEnJee.txt");
 
-    printSuperblock(device);
-    printRootinode(device);
+
+	file << "Opening device '" << floppie << "'" << std::endl;
+	file << "----------------------------------------" << std::endl;
+
+	Device  device(floppie);	// A device instance
+	printSuperblock(device);
+	printRootinode(device);
+	file.close();
 }
 
-
-void    printSuperblock(Device& device)
+void	printSuperblock(Device& device)
 {
-    // - - - - - - - - - - -
-    // read SUPERBLOCK data
-    // Also see: e7filsys.h
-    // - - - - - - - - - - -
     // Fetch the block containing the super-block
-    Block*  sp = device.getBlock(SUPERB);
-    // We are going to use the u.fs view on it's contents
-    // You can print the data with the printf function from C
-    // which gives you precise control over the layout ...
-    printf("printf     fs.s_isize=%d fs.s_fsize=%d\n",
-            sp->u.fs.s_isize, sp->u.fs.s_fsize);
-    // See Also: man 3 printf
-    // ... or use the iostream operators from C++
-    std::cout << "std::cout  fs.s_isize=" << sp->u.fs.s_isize
-              << " fs.s_fsize=" << sp->u.fs.s_fsize << std::endl;
-    // The superblock-last-update timestamp can be
-    // converted to human readable format with ctime()
-    // (which always adds a newline character!) ...
-    std::cout << "fs.s_time=" << ctime(&sp->u.fs.s_time);   // see: man 3 ctime
-    // ... or use printf and limit the output to 24 chars
-    printf("fs.s_time=%.24s\n", ctime(&sp->u.fs.s_time));   // see: man 3 ctime
-    // Note: The time shown may differ from the given dump.txt file
-    //       because of daylight savings time and different timezones.
-    //       Internally all times are expressed in GMT.
-    // Note: When on your system a time_t is 64 bit, you can not use
-    //       ctime(&...) directly. Instead you have to use a little
-    //       work-around. First assign the 32 bit time_x timestamp
-    //       to a 64 bit time_t temporary:
-    //          time_t  x = sp->u.fs.s_time;
-    //       then use ctime on that temporary
-    //          ... ctime(&x) ...
-    // Because on the actual filesystem "strings" are not
-    // guarantied to be null-terminated, simply printing
-    // them you may risk printing your entire memory until
-    // we somewhere run into a 0-byte.
-    // To handle this problem a special C-string wrapper class
-    //      cstr(const char[] text, unsigned maxlen)
-    // with a suitable output operator is provided ...
-    std::cout << "fs.s_fname=" << cstr(sp->u.fs.s_fname,6)
-              << ", fs.s_fpack=" << cstr(sp->u.fs.s_fpack,6) << std::endl;
-    // .. or use printf again and tell it to stop after N characters.
-    printf("fs.s_fname=%.6s, fs.s_fpack=%.6s\n",
-            sp->u.fs.s_fname, sp->u.fs.s_fpack);
-    sp->release();  // We no longer need the super block
+	Block*  sp = device.getBlock(SUPERB);
+
+	file << "Dump of superblock on volume: " << cstr(sp->u.fs.s_fname,6) << "." <<cstr(sp->u.fs.s_fpack,6) << std::endl;
+	file << "----------------------------------------" << std::endl;
+
+    file << "userdata area starts in block: " << sp->u.fs.s_isize <<std::endl;
+    file << "number of blocks on this volume is: " << sp->u.fs.s_fsize <<std::endl;
+
+    file << "Number of free blocks: " << sp->u.fs.s_nfree << std::endl;
+    file << arrayToString(sp->u.fs.s_free, sp->u.fs.s_nfree);
+
+    //TODO hulpmethode voor for loop
+    file << "Number of free inodes: " << sp->u.fs.s_ninode << std::endl;
+    file << unsignedArrayToString(sp->u.fs.s_inode, sp->u.fs.s_ninode);
+
+
+
+    //TODO hulpmethode om 0 om te zetten naar set
+	file << "Freelist lock flag: " << sp->u.fs.s_flock << std::endl;
+	file << "ilist lock flag: " << sp->u.fs.s_ilock << std::endl;
+	file << "superblock-modified: " << sp->u.fs.s_fmod << std::endl;
+	file << "Read only flag: " << sp->u.fs.s_ronly << std::endl;
+
+	file << "Last update time was: " << ctime(&sp->u.fs.s_time);
+	file << "Total number of free blocks: " << sp->u.fs.s_tfree << std::endl;
+	file << "Total number of free inodes: " << sp->u.fs.s_tinode << std::endl;
+	file << "Interleave factors are: " << "m=" << sp->u.fs.s_m << " , n=" << sp->u.fs.s_n << std::endl;
+	file << "File system name: " << cstr(sp->u.fs.s_fname, 6) << std::endl;
+	file << "File system pack: " << cstr(sp->u.fs.s_fpack, 6) << std::endl;
+
+	file << "----------------------------------------" << std::endl;
+	file << "Rest of free list continues in block " <<  sp->u.fs.s_free[0]<< std::endl;
+	file << "----------------------------------------" << std::endl;
+
+	Block* bl = device.getBlock(sp->u.fs.s_free[0]);
+
+	file << "Freeblock " << sp->u.fs.s_free[0] << ": " << bl->u.fb.df_nfree << std::endl;
+	file << arrayToString(bl->u.fb.df_free, bl->u.fb.df_nfree) << std::endl;
+
+    while (bl->u.fs.s_free[-1] != 0){
+        file << "Freeblock " << bl->u.fs.s_free[-1] << ": " << bl->u.fb.df_nfree << std::endl;
+        bl->release();
+        bl = device.getBlock(bl->u.fs.s_free[-1]);
+        file << arrayToString(bl->u.fb.df_free, bl->u.fb.df_nfree) << std::endl;
+    }
+
+    bl->release();
+    sp->release();	// We no longer need the super block
+}
+
+std::string  arrayToString(int array[], int stopCondition){
+    std::stringstream ss;
+    for (int i = 0; i < stopCondition; i++)
+    {
+        ss << array[i] << ' ';
+    }
+    ss << std::endl;
+
+    return ss.str();
+
+}
+std::string  unsignedArrayToString(uint16_t array[], int stopCondition){
+    std::stringstream ss;
+    for (int i = 0; i < stopCondition; i++)
+    {
+        ss << array[i] << ' ';
+    }
+    ss << std::endl;
+
+    return ss.str();
+
 }
 
 
 
-void    printRootinode(Device& device)
+void	printRootinode(Device& device)
 {
-    // - - - - - - - - - - - - -
-    // read INODE's from disk
-    // Also see: e7ino.h
-    // - - - - - - - - - - - - -
-    // Fetch the block containing the root inode
-    Block*  ip = device.getBlock( itod(ROOTINO) );
-    // Going to use the u.dino[] view on the block.
-    // Use a pointer variable as a shortcut to the wanted dinode in this block
-    dinode* dp = &ip->u.dino[ itoo(ROOTINO) ];
-    // Print the inode type + protection flags
-    // If (di_mode == 0) then this inode is not used
-    printf("inode %d, mode=%#o (expect 040777)\n", ROOTINO, dp->di_mode);
-    // or
-    std::cout << "inode " << ROOTINO << ", mode="
-              // switching between octal/decimal notation
-              << std::oct << dp->di_mode << std::dec
-              << " (expect 040777)" << std::endl;
-    // Verify this is indeed a directory inode using a "bit-mask test"
-    if((dp->di_mode & X_IFMT) == X_IFDIR) {
-        printf(AC_GREEN "Good: it is a directory\n"     AA_RESET);
-    } else {
-        printf(AC_RED   "Oops: it is not a directory\n" AA_RESET);
-    }
-    // Convert the 13, 24-bits, blocknumbers in the inode
-    // to normal 32-bit daddr_x values (only valid for DIR or REG type!)
-    daddr_x  diskaddrs[NADDR];              // provide some room to store those 13 blocknumbers
-    Block::l3tol(diskaddrs, dp->di_addr);   // the data convertion routine
-    std::cout << "diskaddr: ";
-    for(auto addr : diskaddrs) {            // A C++ "range-base-for-loop"
-        printf(" %d", addr);
-    }
-    std::cout << std::endl;
-    ip->release();  // We no longer need this inode block
+	// - - - - - - - - - - - - -
+	// read INODE's from disk
+	// Also see: e7ino.h
+	// - - - - - - - - - - - - -
+    Block*  ip_x = device.getBlock( SUPERB );
+    file << "----------------------------------------" << std::endl;
+
+    ino_x	ninode = (ip_x->u.fs.s_isize - 2) * INOPB;
+	file << "Examining " << ninode << " inodes" << std::endl;
+
+    file << "----------------------------------------" << std::endl;
+
+    for(ino_x  inum = 1; inum < ninode; ++inum) {
+        // Fetch the block containing the root inode
+        Block*  ip = device.getBlock( itod(inum) );
+        // Going to use the u.dino[] view on the block.
+        // Use a pointer variable as a shortcut to the wanted dinode in this block
+        dinode*	dp = &ip->u.dino[ itoo(inum) ];
+
+
+
+        if(dp->di_mode != 0)	// Is this inode being used ?
+        {
+            // Does this kind of inode have datablocks?
+            bool hasData = (   ((dp->di_mode & X_IFMT) == X_IFREG)	// a regular file
+                            || ((dp->di_mode & X_IFMT) == X_IFDIR)	// a directory
+                           );
+            if(hasData) {
+                file << std::endl << "Reading inode " << inum << std::endl;
+                file << "mode=0" << std::oct << dp->di_mode << std::dec << std::endl;
+                file << "nlink=" << dp->di_nlink << " uid=" << dp->di_uid << " gid=" << dp->di_gid << std::endl;
+                file << "atime=" << ctime(&dp->di_atime);
+                file << "ctime=" << ctime(&dp->di_ctime);
+                file << "mtime=" << ctime(&dp->di_mtime);
+                blockSize = ceil(dp->di_size / (double) DBLKSIZ);
+                file << "size=" << dp->di_size << "(this block uses at most "  <<  blockSize << ")" << std::endl;
+
+                // Convert the 13, 24-bits, blocknumbers in the inode
+                // to normal 32-bit daddr_x values (only valid for DIR or REG type!)
+                daddr_x  diskaddrs[NADDR];				// provide some room to store those 13 blocknumbers
+                Block::l3tol(diskaddrs, dp->di_addr);	// the data convertion routine
+
+
+                std::vector<daddr_x> adresses;
+                file << "addr: ";
+                for(int i= 0; i < NADDR; ++i){
+                    daddr_x adres = diskaddrs[i];
+
+                    file << adres << " ";
+                    if(adres != 0){
+                        adresses.push_back(adres);
+                    }
+                }
+                int level = 0;
+                bool isDirectory = (dp->di_mode & X_IFMT) == X_IFDIR;
+                file << std::endl;
+                if (isDirectory) {
+                    file << "Direct blocks in inode: ";
+                    for(daddr_x adres : adresses){
+                        file << adres << " ";
+                    }
+                    file << std::endl;
+                    file << "Contents of directory: " << std::endl;
+                    for(daddr_x adres : adresses){
+                    Block* bl = device.getBlock(adres);
+                        for(int i =0; i < NDIRENT; ++i){
+                            if(bl->u.dir[i].d_ino != 0 ){
+                                if (isDirectory){
+                                    file << bl->u.dir[i].d_ino << " \t'"  << bl->u.dir[i].d_name <<  "'" << std::endl;
+                                }
+                            }
+                        }
+                        bl->release();
+                    }
+                } else {
+                    if(inum != 1){
+                        file << "Direct blocks in inode: ";
+                        for(int i = 0; i < NADDR; ++i){
+                            if(i <=  9){
+                                file << diskaddrs[i] << " ";
+                                blockSize--;
+                            } else {
+                                if(diskaddrs[i] != 0){
+                                    file << std::endl;
+                                    file << "Block number in level " << ++level << " indirection block " << diskaddrs[i] << ": ";
+                                    Block* bl = device.getBlock(diskaddrs[i]);
+                                    printIndirectionBlock(device, bl, level-1, blockSize);
+                                    bl->release();
+                                }
+                            }
+                        }
+                    }
+                    file << std::endl;
+                }
+            }
+        }
+
+        ip->release();
+	}
+	ip_x->release();	// We no longer need this inode block
 }
 
+void printIndirectionBlock(Device& device, Block* bl, int lvl, int size){
 
-// ================================================================
+    for(int j = 0; j < NINDIR; ++j){
+        if(blockSize == 0){
+            //file << "Gaat eruit" << std::endl;
+            return;
+        } else {
+            int temp = bl->u.bno[j];
+
+            for(int i = 0; i < lvl; ++i){
+                file << "[";
+            }
+            file << temp ;
+            for(int i = 0; i < lvl; ++i){
+                file << "]";
+            }
+            file << " ";
+
+            if(temp == 0 && lvl > 0){
+                blockSize = blockSize-pow(128, lvl);
+            } else if(temp != 0 && lvl > 0){
+                Block* block = device.getBlock(temp);
+                printIndirectionBlock(device, block , lvl -1, blockSize);
+                block->release();
+            } else {
+                --blockSize;
+            }
+
+
+        }
+
+    }
+}
+
+// ====================
 
 // Main is just the TUI
 int  main(int argc, const char* argv[])
 {
-	try {
-// Note: To get your output into file 'log.txt', change the 0 below into a 1
-#if	0
-		std::cerr << "Sending output to log.txt" << std::endl;
-		close(1);
-		if( open("log.txt", O_WRONLY|O_TRUNC|O_CREAT, 0666) < 0)
-			throw unix_error("log.txt");
-#endif
-		// Tell cout to add a 0 or 0x prefix when printing in non-decimal notation
-		std::cout << std::showbase;
+	// This tells cout to add a 0 or 0x prefix
+	// when printing numbers in non decimal notation
+	std::cout << std::showbase;
 
-		// Pass the given parameter or use the default filename ?
+	try {
+		// Pass a given parameter or use the default ?
 		dump((argc > 1) ? argv[1] : "floppie.img");
 		return EXIT_SUCCESS;
-	} catch(const unix_error& e) {
-		std::cerr << AC_RED "SYSTEM: " << e.what() << AA_RESET << std::endl;
-		return EXIT_FAILURE;
 	} catch(const std::exception& e) {
 		std::cerr << AC_RED "OOPS: " << e.what() << AA_RESET << std::endl;
 		return EXIT_FAILURE;
@@ -161,7 +279,3 @@ int  main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 }
-
-
-// vim:aw:ai:ts=4:
-
