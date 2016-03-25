@@ -2,7 +2,6 @@
  *	Dump information about a file with the 7th edition of Unix filesystem.
  *  @author Jasper van Lierop
  *  @author Niels Jan van de Pol
- *	@specialThanks Casper Halleriet & Sjoerd de Vries for helping us with some problems.
  */
 // Include streams.
 #include <iostream>
