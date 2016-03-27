@@ -26,7 +26,7 @@ const std::string spacer = "****************************************\n";
 
 // Instance of attributes.
 std::ofstream file;
-int blockSize;
+int blocksize;
 
 /// Define some methods for later use.
 // Write a array to the instance file
@@ -41,11 +41,8 @@ void 	writeSuperBlockInfo(Block*);
 void	writeInodeInfo(Device&);
 // Write specific directory information about a single inode
 void 	writeInodeDirectories(Device&, dinode*, std::vector<daddr_x>, ino_x);
-
-
-
-/// TODO
-void    nogGoedeNaamGeven(Device&, Block*, int, int);
+// Write indirection block info
+void    writeIndirectionBlock(Device&, Block*, int, int);
 
 
 
@@ -168,8 +165,8 @@ void	writeInodeInfo(Device& device)
 				file << "atime=" << ctime(&dp->di_atime);
 				file << "ctime=" << ctime(&dp->di_ctime);
 				file << "mtime=" << ctime(&dp->di_mtime);
-				blockSize = ceil(dp->di_size / (double) DBLKSIZ);
-				file << "size=" << dp->di_size << "(this block uses at most "  <<  blockSize << ")" << std::endl;
+				blocksize = ceil(dp->di_size / (double) DBLKSIZ);
+				file << "size=" << dp->di_size << "(this block uses at most "  <<  blocksize << ")" << std::endl;
 
 				// Convert the 13, 24-bits, blocknumbers in the inode
 				// to normal 32-bit daddr_x values (only valid for DIR or REG type!)
@@ -203,10 +200,6 @@ void	writeInodeInfo(Device& device)
 ///****************************************************
 /// Write address information about a certain inode.
 ///****************************************************
-///****************************************************
-/// TODO METHODE HERSCHRIJVEN
-///
-///****************************************************
 void 	writeInodeDirectories(Device& device, dinode* dp,  std::vector<daddr_x> addresses, ino_x inum)
 {
 	// TODO: Hergebruik
@@ -214,7 +207,7 @@ void 	writeInodeDirectories(Device& device, dinode* dp,  std::vector<daddr_x> ad
 	Block::l3tol(diskaddrs, dp->di_addr);
 
 	int level = 0;
-	// Check if dp is a directory
+	// Check if dp implicates a directory
 	bool isDirectory = (dp->di_mode & X_IFMT) == X_IFDIR;
 
 	// It is a directory, print contents
@@ -226,74 +219,60 @@ void 	writeInodeDirectories(Device& device, dinode* dp,  std::vector<daddr_x> ad
 		file << std::endl;
 		file << "Contents of directory: " << std::endl;
 		for(daddr_x address : addresses) {
-			Block* bl = device.getBlock(address);
+			Block* block = device.getBlock(address);
 			for(int i =0; i < NDIRENT; ++i) {
-				if(bl->u.dir[i].d_ino != 0 ) {
+				if(block->u.dir[i].d_ino != 0 ) {
 					if (isDirectory) {
-						file << bl->u.dir[i].d_ino << " \t'"  << bl->u.dir[i].d_name <<  "'" << std::endl;
+						file << block->u.dir[i].d_ino << " \t'"  << block->u.dir[i].d_name <<  "'" << std::endl;
 					}
 				}
 			}
-			bl->release();
+			block->release();
 		}
 
-		// Not a directory, print direct blocks
+	// Not a directory, print direct blocks
 	} else {
 		if(inum != 1) {
 			file << "Direct blocks in inode: ";
 			for(int i = 0; i < NADDR; ++i) {
 				if(i <=  9) {
 					file << diskaddrs[i] << " ";
-					blockSize--;
+					blocksize--;
 				} else {
 					if(diskaddrs[i] != 0) {
 						file << std::endl;
 						file << "Block number in level " << ++level << " indirection block " << diskaddrs[i] << ": ";
-						Block* bl = device.getBlock(diskaddrs[i]);
-						nogGoedeNaamGeven(device, bl, level-1, blockSize);
-						bl->release();
+						Block* block = device.getBlock(diskaddrs[i]);
+						writeIndirectionBlock(device, block, level-1, blocksize);
+						block->release();
 					}
 				}
 			}
 		}
 		file << std::endl;
 	}
-
-
 }
 
 ///****************************************************
-/// TODO METHODE HERSCHRIJVEN
-///
+/// Write indirection blocks
 ///****************************************************
-void nogGoedeNaamGeven(Device& device, Block* bl, int lvl, int size)
+void writeIndirectionBlock(Device& device, Block* block, int lvl, int size)
 {
+	for (int i = 0; i < NINDIR; ++i) {
+        if (blocksize ==0) return;
+        for (int currLvl = 0; currLvl < lvl; ++currLvl) file << "[";
+        int blockNr = block->u.bno[i];
+        file << blockNr;
+        for (int currLvl = 0; currLvl < lvl; ++currLvl) file << "]";
+        file << " ";
 
-	for(int j = 0; j < NINDIR; ++j) {
-		if(blockSize == 0) {
-			return;
-		} else {
-			int temp = bl->u.bno[j];
-
-			for(int i = 0; i < lvl; ++i) {
-				file << "[";
-			}
-			file << temp ;
-			for(int i = 0; i < lvl; ++i) {
-				file << "]";
-			}
-			file << " ";
-
-			if(temp == 0 && lvl > 0) {
-				blockSize = blockSize-pow(128, lvl);
-			} else if(temp != 0 && lvl > 0) {
-				Block* block = device.getBlock(temp);
-				nogGoedeNaamGeven(device, block , lvl -1, blockSize);
-				block->release();
-			} else {
-				--blockSize;
-			}
-		}
+        if (lvl > 0 && blockNr == 0) blocksize = blocksize - pow(128, lvl);
+        else if (lvl == 0) blocksize--;
+		else {
+			Block* newBlock = device.getBlock(blockNr);
+			writeIndirectionBlock(device, newBlock, lvl-1, blocksize);
+			newBlock -> release();
+        }
 	}
 }
 
