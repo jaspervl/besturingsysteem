@@ -6,7 +6,6 @@
 // Include streams.
 #include <iostream>
 #include <fstream>
-#include <sstream>
 // Include custom classes.
 #include "ansi.h"
 #include "asserts.h"

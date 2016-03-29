@@ -41,7 +41,7 @@ using std::vector;
 // Globale hulpvariabelen voor 'main' en 'doOptions'
 
 // wat gaan we doen
-int			  size = 10240;			///< de omvang van het beheerde geheugen
+int			  size = 1048576;		///< de omvang van het beheerde geheugen  (WORST CASE)
 bool		  cflag = false;		///< laat de allocator foute 'free' acties detecteren
 									///< (voor sommige algorithmes is dit duur)
 
@@ -83,11 +83,11 @@ void	tellOptions(const char *progname)
 /// Kan/zal diverse globale variabelen veranderen !
 void	doOptions(int argc, char *argv[])
 {
-	char  options[] = "s:a:tvcP"; // De opties die we willen herkennen
+	char  options[] = "s:a:tvcrfFnNP"; // De opties die we willen herkennen
 	// Als je algoritmes toevoegt dan moet je de string hierboven uitbreiden.
 	// (Vergeet niet om de tellOptions functie hiervoor ook aan te passen)
 	// Als je alle algoritmes zou realiseren dan wordt
-	// het iets in de trant van: "s:a:tvcrfFnNbBwWpm2"
+	// het iets in de trant van: "s:a:tvcrfFnNbBwWP"
 	//
 	// Algemene opties:
 	// "s:" staat voor: -s xxx = omvang van het beheerde geheugen (in "eenheden")
@@ -103,11 +103,9 @@ void	doOptions(int argc, char *argv[])
 	// n  staat voor; -n = next-fit allocator (lazy)
 	// N  staat voor; -N = next-fit allocator (eager)
 	// b  staat voor; -b = best-fit allocator (lazy)
-	// B  staat voor; -b = best-fit allocator (eager)
+	// B  staat voor; -B = best-fit allocator (eager)
 	// w  staat voor; -w = worst-fit allocator (lazy)
-	// W  staat voor; -w = worst-fit allocator (eager)
-	//  enz
-	// 2  staat voor: -2 = buddy allocator
+	// W  staat voor; -W = worst-fit allocator (eager)
 	//
 	// Voor meer informatie, zie: man 3 getopt
 	//
@@ -151,6 +149,7 @@ void	doOptions(int argc, char *argv[])
 			case 'N': // -n = NextFit2 allocator gevraagd
 				beheerders.push_back( new NextFit2 );
 				break;
+
 			/// CUSTOM
 			case 'P':	// -P = Power of two allocator gevraagd
 				beheerders.push_back( new PowerOfTwo );
@@ -225,24 +224,21 @@ int  main(int argc, char *argv[])
 					 << " with " << size << " units\n" AA_RESET;
 				mp->testing(); // ga dan de code testen
 			} else {
+				/// CUSTOM
+				// Perfect scenario
+				aantal = 10000000;
 				cout << AC_BLUE "Measuring " << beheerder->getType()
 					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
-				mp->randomscenario(aantal, vflag);
+				mp->perfectScenario(aantal, vflag);
 
-
-
-
-				// TODO:
-				// .. vervang straks 'randomscenario' door iets toepasselijkers
-				// zodat je ook voorspelbare scenarios kan afhandelen.
-
-
-
-
-
-
+				// worst scenario
+				//mp->worstScenario(vflag);
+				//cout << AC_BLUE "Measuring " << beheerder->getType()
+				//	 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
+				/// END CUSTOM
 			}
 
+			cout << "******************************************************************" << std::endl;
 			// Nu alles weer netjes opruimen
 			delete  mp;
 			delete  beheerder;

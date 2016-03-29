@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.cc
 	"main.h"
 	"Allocator.h"
 
-1458650902 c:\users\enjee\documents\github\besturingsysteem\memadmin\main.h
+1458654502 c:\users\enjee\documents\github\besturingsysteem\memadmin\main.h
 	<iostream>
 	"common.h"
 	"ansi.h"
@@ -11,34 +11,35 @@
 	"Area.h"
 	"Allocator.h"
 
-1458650898 c:\users\enjee\documents\github\besturingsysteem\memadmin\common.h
+1458654498 c:\users\enjee\documents\github\besturingsysteem\memadmin\common.h
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\ansi.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\ansi.h
 	"common.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\asserts.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\asserts.h
 	"where.h"
 	"assert_error.h"
 
-1458650903 c:\users\enjee\documents\github\besturingsysteem\memadmin\where.h
+1458654503 c:\users\enjee\documents\github\besturingsysteem\memadmin\where.h
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\assert_error.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\assert_error.h
 	<stdexcept>
 
-1458658941 c:\users\enjee\documents\github\besturingsysteem\memadmin\area.h
+1458662541 c:\users\enjee\documents\github\besturingsysteem\memadmin\area.h
 	<iostream>
 	"asserts.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\allocator.h
 	"Area.h"
 
-1458684529 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\application.cc
+1459180514 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\application.cc
 	<cstdlib>
 	"main.h"
 	"Stopwatch.h"
 	"Application.h"
+	"Math.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\stopwatch.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\stopwatch.h
 	<sys/resource.h>
 	<sys/times.h>
 	<times.h>
@@ -46,43 +47,43 @@
 	<sys/time.h>
 	<windows.h>
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\application.h
+1459179842 c:\users\enjee\documents\github\besturingsysteem\memadmin\application.h
 	<list>
 	"Allocator.h"
 	"Area.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\area.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\area.cc
 	"asserts.h"
 	"Area.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\assert_error.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\assert_error.cc
 	<string>
 	<sstream>
 	"assert_error.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit.cc
 	"FirstFit.h"
 	"ansi.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit.h
 	"Fitter.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\fitter.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\fitter.h
 	<list>
 	"Allocator.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit2.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit2.cc
 	"FirstFit2.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit2.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\firstfit2.h
 	"FirstFit.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\fitter.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\fitter.cc
 	<cmath>
 	"ansi.h"
 	"Fitter.h"
 
-1458686003 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\main.cc
+1459180538 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\main.cc
 	<vector>
 	<cstdlib>
 	<getopt.h>
@@ -95,41 +96,41 @@
 	"PowerOfTwo.h"
 	"Application.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.h
 	"Allocator.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.h
 	"Fitter.h"
 
-1458650897 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.h
+1458654497 c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.h
 	"NextFit.h"
 
-1458683262 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
+1458686862 c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.h
 	"Allocator.h"
 	<vector>
 	"math.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit.cc
 	"main.h"
 	"NextFit.h"
 	"ansi.h"
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\nextfit2.cc
 	"NextFit2.h"
 
-1458684675 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
+1458688275 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\poweroftwo.cpp
 	"PowerOfTwo.h"
 	"ansi.h"
 	"math.h"
 	<vector>
 	<iostream>
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\randomfit.cc
 	"main.h"
 	"RandomFit.h"
 	<cstdlib>
 
-1458650897 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\stopwatch.cc
+1458654497 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\stopwatch.cc
 	<iostream>
 	<cstdio>
 	"asserts.h"
@@ -137,13 +138,13 @@
 	<unistd.h>
 	<time.h>
 
-1458650903 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\unix_error.cc
+1458654503 source:c:\users\enjee\documents\github\besturingsysteem\memadmin\unix_error.cc
 	<cstring>
 	<cerrno>
 	<sstream>
 	"unix_error.h"
 
-1458650903 c:\users\enjee\documents\github\besturingsysteem\memadmin\unix_error.h
+1458654503 c:\users\enjee\documents\github\besturingsysteem\memadmin\unix_error.h
 	<stdexcept>
 	<string>
 	"where.h"

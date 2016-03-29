@@ -54,9 +54,10 @@ public:
 	/// @param	vflag	true=vertel wat er allemaal gebeurt (kost wel performance)
 	void randomscenario(int aantal, bool vflag);
 
-	// TODO:
-	// voeg hier straks je eigen scenario(s) toe
-	// (en in Application.cc)
+	/// CUSTOM
+	void perfectScenario(int aantal, bool vflag);
+	void worstScenario(bool vflag);
+	/// END CUSTOM
 
 private:
 

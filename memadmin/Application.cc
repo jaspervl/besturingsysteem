@@ -10,6 +10,7 @@
 #include "main.h"			// common global stuff
 #include "Stopwatch.h"		// De cpu tijd meter
 #include "Application.h"	// De pseudo applicatie
+#include "Math.h"
 
 // introduce std shorthands
 using std::cout;
@@ -326,10 +327,87 @@ void	Application::randomscenario(int aantal, bool vflag)
 	this->vflag = old_vflag; // turn on verbose output again
 }
 
+/// CUSTOM
 
-// TODO:
-// Schrijf je eigen scenario routine die zich meer gedraagt als een
-// echte applicatie. En vergeet niet Application.h ook aan te passen.
+/// Een nagenoeg perfect scenario voor het power of 2 algoritme,
+/// Heel vaak dezelfde blokgrootte opvragen en vrijgeven. (blok size staat dan al klaar).
+void	Application::perfectScenario(int aantal, bool vflag)
+{
+	bool old_vflag = this->vflag;
+	this->vflag = vflag;	// verbose mode aan/uit
+
+	oom_teller = 0;			// reset failure counter
+	err_teller = 0;			// reset error counter
+
+	// Nu komt het eigenlijke werk:
+	Stopwatch  klok;		// Een stopwatch om de tijd te meten
+	klok.start();			// -----------------------------------
+
+	int blockSize = (size/2) / 100; 		// te vragen blokjes zijn '0,5%' van het geheugen
+	for (int  x = 0 ; x < aantal ; ++x) {	// Doe nu tig-keer "iets".
+		vraagGeheugen(blockSize);
+
+		vergeetRandom();
+	}
+
+	klok.stop();			// -----------------------------------
+	klok.report();			// Vertel de gemeten processor tijd
+	beheerder->report();	// en de statistieken van de geheugenbeheer zelf
+
+	// Evaluatie
+	if ((oom_teller > 0) || (err_teller > 0) ) {	// some errors occured
+	    cout << AC_RED "De allocater faalde " << oom_teller << " keer";
+	    cout << " en maakte " << err_teller << " fouten\n" AA_RESET;
+	} else {										// no problems
+	    cout << AC_GREEN "De allocater faalde " << oom_teller << " keer";
+	    cout << " en maakte " << err_teller << " fouten\n" AA_RESET;
+	}
+
+	this->vflag = old_vflag; // turn on verbose output again
+}
+
+/// Worst case scenario. Elk gebied helemaal opknippen tot het kleinste en dan alles vrijgeven.
+void	Application::worstScenario(bool vflag)
+{
+	bool old_vflag = this->vflag;
+	this->vflag = vflag;	// verbose mode aan/uit
+
+	oom_teller = 0;			// reset failure counter
+	err_teller = 0;			// reset error counter
+
+	// Nu komt het eigenlijke werk:
+	Stopwatch  klok;		// Een stopwatch om de tijd te meten
+	klok.start();			// -----------------------------------
+
+	int blockSize = 32;
+	int repeat = (size / blockSize);
+	for (int i = 0 ; i < repeat; ++i)
+	{
+		vraagGeheugen(blockSize);
+	}
+	for (int i = 0 ; i < repeat; ++i)
+	{
+		vergeetRandom();
+	}
+
+	klok.stop();			// -----------------------------------
+	klok.report();			// Vertel de gemeten processor tijd
+	beheerder->report();	// en de statistieken van de geheugenbeheer zelf
+
+	// Evaluatie
+	if ((oom_teller > 0) || (err_teller > 0) ) {	// some errors occured
+	    cout << AC_RED "De allocater faalde " << oom_teller << " keer";
+	    cout << " en maakte " << err_teller << " fouten\n" AA_RESET;
+	} else {										// no problems
+	    cout << AC_GREEN "De allocater faalde " << oom_teller << " keer";
+	    cout << " en maakte " << err_teller << " fouten\n" AA_RESET;
+	}
+
+	this->vflag = old_vflag; // turn on verbose output again
+}
+
+/// END CUSTOM
+
 
 
 // vim:sw=4:ai:aw:ts=4:
