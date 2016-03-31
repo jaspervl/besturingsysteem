@@ -62,14 +62,7 @@ class	Command
 		/// (Also see getenv(3), getcwd(3), access(2), execv(3)).
 		void	execute();
 
-		// TODO: Add any other methods you need
-        bool           hasCommand(std::string);
-        inline bool    hasLs() { return hasCommand("ls"); };
-        inline bool    hasCd() { return hasCommand("cd"); };
-        inline bool    hasPwd() { return hasCommand("pwd"); };
-        inline bool    hasClear() { return hasCommand("clear"); };
-        inline bool    hasExit() { return hasCommand("exit"); };
-
+        bool    hasDirectCommand();
 };
 
 // vim:ai:aw:ts=4:sw=4:

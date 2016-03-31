@@ -1,13 +1,23 @@
-#ifndef	ASSERTS_H
-#define	ASSERTS_H 5.2
+#pragma once
+#ifndef	__asserts_h__
+#define	__asserts_h__ 3.1
+//#ident "@(#)asserts.h	3.1	AKK	2013/11/16"
+
 /** @file asserts.h
  * This file defines various macro's that can be used as checks in your program.
- * <br>Note: If NDEBUG has been defined the assertions will be totally disabled for that
+ * <br>If NDEBUG has been defined the assertions will be totally disabled for that
  * translation unit.
+ * @note It relies on the __FILE__, __LINE__ and __PRETTY_FUNCTION__
+ *			compiler magic names to actually identify lines of source code.
+ * <br>If your compiler does not provide the __PRETTY_FUNCTION__ magic name,
+ * 		you can \#define it as __FUNCTION__ (gcc) or __func__ (any compiler).
+ * 		You can also \#define it as 0 and the 'assert_error' constructor will
+ * 		then ignore that parameter.
  *
  * @author R.A.Akkersdijk@saxion.nl
- * @version 5.2	2016/01/19
+ * @version 3.1	2013/11/16
  */
+
 
 // First remove these macro's
 #undef	require
@@ -16,65 +26,55 @@
 #undef	notreached
 
 
-#ifdef	NDEBUG		/* === disable asserts? === */
-
+#ifdef	NDEBUG	/* disable asserts? */
 
 // Make sure that another #include "asserts.h" can be used
 // to enable assertions again later.
-# undef ASSERTS_H
+# undef __asserts_h__
 
 // Define some dummy macro's that have no side-effects
-// and will be eliminated by the compiler
 # define require(expr)	((void)(0))
 # define check(expr)	((void)(0))
 # define ensure(expr)	((void)(0))
 # define notreached()	((void)(0))
 
 
-#else				/* === asserts enabled === */
+#else /* asserts enabled */
 
 
-# include "where.h"			// the filename[linenumber] C-string and the function name
-# include "assert_error.h"	// the assert_error class
-
-
-// What to do if an assertion is not true
-# define	ASSERTFAILED(what)\
-	throw assert_error(__WHERE__," " what " failed")
-
+#include "assert_error.h"
 
 /**
- * Verify whether a \c precondition is met, for instance: require(x>0);
- * This will typically be used at the beginning of a function or method.
+ * Verify whether a precondition is met, for instance: require(x>0);
  */
 # define	require(condition) \
-	do { if(!(condition)) ASSERTFAILED("require "#condition); } while(0)
+	if(!(condition)) \
+		throw assert_error(__FILE__,__LINE__,__PRETTY_FUNCTION__,"require",#condition)
 
 /**
- * Verify an internal \c consistenty \c check, for instance: check(x>0);
- * This will typically be used somewhere in a function or method.
+ * Verify an internal consistenty check, for instance: check(x>0);
  */
 # define	check(condition) \
-	do { if(!(condition)) ASSERTFAILED("check "#condition); } while(0)
+	if(!(condition)) \
+		throw assert_error(__FILE__,__LINE__,__PRETTY_FUNCTION__,"check",#condition)
 
 /**
- * Verify whether a \c postcondition is met, for instance: ensure(x>0);
- * This will typically be used at the end of a function or method.
+ * Verify whether a postcondition is met, for instance: ensure(x>0);
  */
 # define	ensure(condition) \
-	do { if(!(condition)) ASSERTFAILED("ensure "#condition); } while(0)
+	if(!(condition)) \
+		throw assert_error(__FILE__,__LINE__,__PRETTY_FUNCTION__,"ensure",#condition)
 
 /**
  * Verify that this line of code is not reached. For instance
  * when the 'default' case of a 'switch' should never be reached
- * you could say:
+ * you can say:
  * 		default: notreached();
- * This will typically be used somewhere in a function or method.
  */
 # define	notreached() \
-	do { ASSERTFAILED("notreached"); } while(0)
+	throw assert_error(__FILE__,__LINE__,__PRETTY_FUNCTION__,"notreached","")
 
-#endif			/* === not NDEBUG === */
+#endif	/* not NDEBUG */
 
+#endif	/*asserts_h*/
 // vim:sw=4:ai:aw:ts=4:
-#endif	/*ASSERTS_H*/

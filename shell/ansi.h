@@ -1,6 +1,9 @@
 #pragma once
-#ifndef	ANSI_H
-#define	ANSI_H 1.2
+#ifndef	__ANSI_H
+#define	__ANSI_H 1
+
+#include "common.h"	// for: __ECLIPSE__ check
+
 /** @file ansi.h
  * Defines various ansi color-code strings.
  * See e.g.
@@ -10,12 +13,10 @@
  * <br>AC_xxx (set foreground color to: BLACK, RED, GREEN, BROWN, BLUE, MAGENTA, CYAN or WHITE)
  * <br>AB_xxx (set background color to: BLACK, RED, GREEN, BROWN, BLUE, MAGENTA, CYAN or WHITE)
  * <br>AA_RESET (reset to normal)
- *
  * @note
- * If the \__ECLIPSE__ pre-processor token was defined
+ * If the __ECLIPSE__ pre-processor token was defined
  * the strings will be left empty because the eclipse
  * console will not handle ansi color-codes.
- *
  * @note
  * If this file is used on a non-unix platform
  * the strings will be left empty because
@@ -25,9 +26,6 @@
  * @author R.A.Akkersdijk@saxion.nl
  * @version 1.2	2012/09/24
  */
-
-#include "common.h"	// for: __ECLIPSE__ check
-
 
 // Ansi Color Code sequences
 

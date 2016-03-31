@@ -41,7 +41,7 @@ bool	isBlank(char c) { return ((c == ' ') | (c == '\t')); }
 static
 // The list of all characters that terminate a "word"
 // which depends on the set of tokens recognized.
-const char	*specials[4] = 
+const char	*specials[4] =
 {
 	"\n\r&;|<> \t",			// 0: basic
 	"\n\r()&;|<>$ \t",		// 1: advanced

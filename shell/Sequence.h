@@ -57,8 +57,6 @@ class	Sequence
 		/// Executes the pipelines stored in 'commands'.
 		void	execute();
 
-		// TODO: Add any other methods you need
-
 };
 
 // vim:ai:aw:ts=4:sw=4:

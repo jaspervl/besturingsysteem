@@ -9,9 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <unistd.h>
 #include "asserts.h"
 #include "unix_error.h"
 #include "Command.h"
@@ -22,6 +19,9 @@ using namespace std;
 #ifndef	PATH_MAX
 # define	PATH_MAX (4096)	/* i.e. virtual pagesize */
 #endif
+
+const int PIPE_READ = 0;
+const int PIPE_WRITE = 1;
 
 
 Command::Command()
@@ -62,17 +62,21 @@ bool	Command::isEmpty() const
 	return input.empty() && output.empty() && words.empty();
 }
 
-// Check if the first word of the args got a certain string command enclosed.
-bool    Command::hasCommand(std::string command)
+bool    Command::hasDirectCommand()
 {
-    for (int i = 0; i < words.size(); ++i) {
-        if (words[i] == command) return true;
+    for (int i = 0 ; i < words.size() ; ++i) {
+        std::string w = words[i];
+        if(     w == "cd"
+            ||  w == "exit"
+            ||  w == "ls"
+            ||  w == "pwd"
+            ||  w == "rm"
+            ||  w == "clear"
+            ||  w == "echo")
+            return true;
     }
     return false;
 }
-
-
-
 
 
 // ===========================================================
@@ -81,7 +85,7 @@ bool    Command::hasCommand(std::string command)
 // Execute a command
 void	Command::execute()
 {
-    // Args opbouwen (uit eerste char van meegegeven woorden).
+    // args bepalen
     char *args[words.size() + 1];
     for (int index = 0; index < words.size(); ++index)
         args[index] = &words[index][0];
@@ -89,123 +93,78 @@ void	Command::execute()
 
 
 
+    // Output aanwezig
+    if(hasOutput()) {
 
-
-    /// TODO:
-    ///close(2), open(2), getcwd(3), getenv(3), access(2), execv(2), exit(2)
-
-
-    // TODO
-    if (hasOutput()) {
-
+        // voorbeeldcode sheets
         char *fileName = (char*)output.c_str();
-        int fd;
+        int pfd;
 
-        if(!append) {
-            fd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        } else {
-            fd = open(fileName, O_APPEND | O_RDWR, S_IRUSR | S_IWUSR);
-        }
+        if(append)
+            pfd = open(fileName, O_APPEND | O_RDWR, S_IRUSR | S_IWUSR);
+        else
+            pfd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
-        dup2(fd, 1);
-        dup2(fd, 2);
-        close(fd);
+        // http://codewiki.wikidot.com/c:system-calls:dup2
+        dup2(pfd, PIPE_READ);
+        dup2(pfd, PIPE_WRITE);
+        close(pfd);
         execvp(args[0], args);
 
-
-    // TODO
+    // Input aanwezig
 	} else if (hasInput()) {
 
-        char *fileName = (char*)input.c_str();
-        int fd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        dup2(fd, 0);
-        close(fd);
+        char *fileName = (char*) input.c_str();
+        int pfd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        dup2(pfd, PIPE_READ);
+        close(pfd);
         execvp(args[0], args);
 
+    // Perform a direct command by delegating it to the appropreate shell ;-)
+    /// TODO: Werkt niet goed
+	} else if(hasDirectCommand()) {
 
-    /// Einde TODO
-
-
-
-
-
-    // The cd command is performed
-	} else if(hasCd()) {
-        if (chdir(args[1]) < 0)
-            cerr << "> File or directory not recognized" << endl;
-
-    // The pwd command is performed
-    } else if (hasPwd()) {
-        char cwd[1024];
-        getcwd(cwd, sizeof(cwd));
-        cerr << "> Current working directory: " << cwd << endl;
-
-    // The ls command is performed
-    } else if (hasLs()) {
-        DIR *dp;
-        struct dirent *ep;
-
-        dp = opendir("./");
-        if (dp != 0) {
-            while (ep = readdir(dp)) {
-                cout << ep->d_name << endl;
-            }
-            closedir(dp);
-        } else {
-            cout << "> Something went wrong while reading the directory" << endl;
+        if (words[0] == "exit") {
+            cerr << "Exiting." << endl;
+            exit(0);    // perform exit
+            return;
         }
 
-    // The clear command is performed
-    } else if (hasClear()) {
-        system("clear");
+        int cid = fork();
+        if (cid > 0) {
+            if (words[0] == "cd") {
+                if (chdir(args[1]) < 0)
+                    cerr << "> File or directory not recognized;" << endl;
+                return;
+            }
+            execvp(args[0], args);
+            cerr << "Failed executing direct command." << endl;
+            exit(0);
+        } else {
+            wait(0);
+        }
 
-    // The exit command is performed
-    } else if (hasExit()) {
-        exit(0);
-
+    // Open a program
     } else {
-        cerr << "> Command not recognized, try again" << endl;
+
+
+        // www.cplusplus.com/reference/cstdlib/getenv/
+        char* path = getenv("PATH");
+        strtok(path, ":");
+        strcat(path, "/");
+        strcat(path, args[0]);
+
+        char dir[1024];
+        getcwd(dir, 1024);
+        strcat(dir, "/");
+        strcat(dir, args[0]);
+
+        execv(path, args);
+        perror("Failed executing command.\n");
+        exit(0);
     }
-
-
-	// TODO:	Handle I/O redirections.
-	//			Don't blindly assume the open systemcall will always succeed!
-	// TODO:	Convert the words vector<string> to: array of (char*) as expected by 'execv'.
-	//			Note: In this case it safe to typecast from 'const char*' to 'char *'.
-	//			Note: Make sure the last element of that array will be a 0 pointer!
-	// TODO:	Determine the path of the program to be executed.
-	// 			If the name contains a '/' it already is a path name,
-	//				either absolute like "/bin/ls" or relative to the
-	//				current directory like "sub/prog".
-	// 			Otherwise it is the name of an executable file to be
-	// 				searched for using the PATH environment variable.
-	// TODO:	Execute the program passing the arguments array.
-	// Also see: close(2), open(2), getcwd(3), getenv(3), access(2), execv(2), exit(2)
-
-	// TODO: replace the code below with something that really works
-
-#if 0	/* DEBUG code: Set to 0 to turn off the next block of code */
-	cerr <<"Command::execute ";
-	// Show the I/O redirections first ...
-	if (!input.empty())
-		cerr << " <"<< input;
-	if (!output.empty()) {
-		if (append)
-			cerr << " >>"<< output;
-		else
-			cerr << " >"<< output;
-	}
-	// ... now show the command & parameters to execute
-	if (words.empty())
-		cerr << "\t(EMPTY_COMMAND)" << endl;
-	else {
-		cerr << "\t";
-		for (vector<string>::iterator  i = words.begin() ; i != words.end() ; ++i)
-			cerr << " " << *i;
-		cerr << endl;
-	}
-#endif	/* end DEBUG code */
 }
 
 
 // vim:ai:aw:ts=4:sw=4:
+
