@@ -37,8 +37,6 @@ class	Pipeline
 
 		// Set to true if this is a background pipeline
 		bool					background;
-		bool                    cdCommand;
-		bool                    exitCommand;
 
 	public:
 

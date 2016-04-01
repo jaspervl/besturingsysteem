@@ -25,9 +25,15 @@ Shell::Shell(istream& input)
 // The main level function
 void	Shell::main()
 {
+	// Ignore some signals
+	// TODO:
+	// but never these ones
+	// TODO:
+
+
 	// The command loop
 	do {
-		cout << " > " << flush;				// prompt the user for command
+		cout << "SHELL: " << flush;				// prompt the user for command
 		Sequence  *sequence = parse();			// parse one line of input
 		// syntax sanity check
 		if ( (tp->getType() != Token::EOL)		// expect either an EOL
@@ -37,7 +43,7 @@ void	Shell::main()
 			execute( sequence );				// oke, execute it
 		delete sequence;						// discard the sequence
 	} while (tp->getType() == Token::EOL);		// while more input expected
-	cout << "Done processing input.\n";
+	cout << "GOODBYE\n";
 }
 
 // =============================================================================
