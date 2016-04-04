@@ -329,45 +329,14 @@ void	Application::randomscenario(int aantal, bool vflag)
 
 /// CUSTOM
 
-/// Een nagenoeg perfect scenario voor het power of 2 algoritme,
-/// Heel vaak dezelfde blokgrootte opvragen en vrijgeven. (blok size staat dan al klaar).
-void	Application::perfectScenario(int aantal, bool vflag)
-{
-	bool old_vflag = this->vflag;
-	this->vflag = vflag;	// verbose mode aan/uit
-
-	oom_teller = 0;			// reset failure counter
-	err_teller = 0;			// reset error counter
-
-	// Nu komt het eigenlijke werk:
-	Stopwatch  klok;		// Een stopwatch om de tijd te meten
-	klok.start();			// -----------------------------------
-
-	int blockSize = (size/2) / 100; 		// te vragen blokjes zijn '0,5%' van het geheugen
-	for (int  x = 0 ; x < aantal ; ++x) {	// Doe nu tig-keer "iets".
-		vraagGeheugen(blockSize);
-
-		vergeetRandom();
-	}
-
-	klok.stop();			// -----------------------------------
-	klok.report();			// Vertel de gemeten processor tijd
-	beheerder->report();	// en de statistieken van de geheugenbeheer zelf
-
-	// Evaluatie
-	if ((oom_teller > 0) || (err_teller > 0) ) {	// some errors occured
-	    cout << AC_RED "De allocater faalde " << oom_teller << " keer";
-	    cout << " en maakte " << err_teller << " fouten\n" AA_RESET;
-	} else {										// no problems
-	    cout << AC_GREEN "De allocater faalde " << oom_teller << " keer";
-	    cout << " en maakte " << err_teller << " fouten\n" AA_RESET;
-	}
-
-	this->vflag = old_vflag; // turn on verbose output again
+/// Check if the list with objecten is in total smaller than half of the memory size allocated to the algorithm.
+bool Application::smallerThanHalfMaxSize(int memSize, int blockSize) {
+	return objecten.size() * blockSize < memSize / 2;
 }
 
-/// Worst case scenario. Elk gebied helemaal opknippen tot het kleinste en dan alles vrijgeven.
-void	Application::worstScenario(bool vflag)
+/// Scenario that allocates and releases loads of tiny memory spaces,
+/// representing a python interpreter.
+void	Application::pythonInterpreter(int aantal, int memorySize, bool vflag)
 {
 	bool old_vflag = this->vflag;
 	this->vflag = vflag;	// verbose mode aan/uit
@@ -380,14 +349,19 @@ void	Application::worstScenario(bool vflag)
 	klok.start();			// -----------------------------------
 
 	int blockSize = 32;
-	int repeat = (size / blockSize);
-	for (int i = 0 ; i < repeat; ++i)
-	{
-		vraagGeheugen(blockSize);
-	}
-	for (int i = 0 ; i < repeat; ++i)
-	{
-		vergeetRandom();
+	int fillSize = memorySize / 100;
+	for (int  x = 0 ; x < aantal ; ++x) {	// Doe nu tig-keer "iets".
+		int random = rand();
+		if ((random % 2 == 0  || objecten.empty()) && smallerThanHalfMaxSize(memorySize, blockSize)) {
+			// Vul 1 procent van het geheugengebied
+			for (int filled = 0 ; filled < fillSize; filled += blockSize)
+				vraagGeheugen(blockSize);
+		}
+		else {
+			// Leeg 1 procent van het geheugengebied
+            for (int filled = 0 ; filled < fillSize; filled += blockSize)
+				vergeetRandom();
+		}
 	}
 
 	klok.stop();			// -----------------------------------

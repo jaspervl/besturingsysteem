@@ -136,9 +136,7 @@ void PowerOfTwo::report(){
     std::cout << "\tTotal size: " << totalSize  << ", max block size: " << getMaxBlockSize() << std::endl;
     std::cout << "\tNumber of blocks total: " << calcFreeBlocks() + nrOfAllocBlocks << std::endl;
     std::cout << "\tFree blocks: " << calcFreeBlocks() << std::endl;
-    std::cout << "\t\tFree blocks cumulatively size: " << size << std::endl;
     std::cout << "\tAllocated blocks: " << nrOfAllocBlocks << std::endl;
-    std::cout << "\t\tAllocated blocks cumulatively size: " << totalSize - size << std::endl;
     std::cout << "\tAverage block size: " << calcAvgBlockSize() << std::endl;
     std::cout << "\tAllocation is called: " << nrOfAllocations << " times" << std::endl;
     std::cout << "\tFree is called: " << nrOfFrees <<  " times" << std::endl;
