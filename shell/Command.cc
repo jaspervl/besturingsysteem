@@ -96,14 +96,14 @@ void	Command::execute()
     // Output aanwezig
     if(hasOutput()) {
 
-        // voorbeeldcode sheets
+        // Stackoverflow example. Licht aangepast.
         char *fileName = (char*)output.c_str();
         int pfd;
 
         if(append)
-            pfd = open(fileName, O_APPEND | O_RDWR, S_IRUSR | S_IWUSR);
+            pfd = open(fileName, O_APPEND | O_RDWR, S_IWUSR | S_IRUSR);
         else
-            pfd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+            pfd = open(fileName, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
         // http://codewiki.wikidot.com/c:system-calls:dup2
         dup2(pfd, PIPE_READ);
