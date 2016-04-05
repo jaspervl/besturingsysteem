@@ -55,8 +55,7 @@ public:
 	void randomscenario(int aantal, bool vflag);
 
 	/// CUSTOM
-	bool smallerThanHalfMaxSize(int, int);
-	void pythonInterpreter(int, int, bool);
+	void pythonInterpreter(int, int, bool, int, int);
 	/// END CUSTOM
 
 private:

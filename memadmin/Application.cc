@@ -328,15 +328,9 @@ void	Application::randomscenario(int aantal, bool vflag)
 }
 
 /// CUSTOM
-
-/// Check if the list with objecten is in total smaller than half of the memory size allocated to the algorithm.
-bool Application::smallerThanHalfMaxSize(int memSize, int blockSize) {
-	return objecten.size() * blockSize < memSize / 2;
-}
-
 /// Scenario that allocates and releases loads of tiny memory spaces,
 /// representing a python interpreter.
-void	Application::pythonInterpreter(int aantal, int memorySize, bool vflag)
+void	Application::pythonInterpreter(int aantal, int memorySize, bool vflag, int minPower, int maxPower)
 {
 	bool old_vflag = this->vflag;
 	this->vflag = vflag;	// verbose mode aan/uit
@@ -346,21 +340,37 @@ void	Application::pythonInterpreter(int aantal, int memorySize, bool vflag)
 
 	// Nu komt het eigenlijke werk:
 	Stopwatch  klok;		// Een stopwatch om de tijd te meten
-	klok.start();			// -----------------------------------
+	klok.start();			// ----------------------------------
 
-	int blockSize = 32;
 	int fillSize = memorySize / 100;
+
 	for (int  x = 0 ; x < aantal ; ++x) {	// Doe nu tig-keer "iets".
+		// Bepaal random blocksize (tussen 32 en 512 bytes)
+		int randomPower = rand();
+		randomPower %= maxPower - minPower + 1;
+		randomPower += minPower;
+		int randomBlockSize = pow(2, randomPower);
+
+		// Total gevulde size
+		int totalSize = 0;
+		// Random (om te gaan vullen of te gaan legen)
 		int random = rand();
-		if ((random % 2 == 0  || objecten.empty()) && smallerThanHalfMaxSize(memorySize, blockSize)) {
+
+		if (objecten.empty() || (random % 2 == 0 && totalSize < (memorySize / 2))) {
 			// Vul 1 procent van het geheugengebied
-			for (int filled = 0 ; filled < fillSize; filled += blockSize)
-				vraagGeheugen(blockSize);
+			for (int filled = 0 ; filled < fillSize; filled += randomBlockSize) {
+				totalSize += randomBlockSize;
+				vraagGeheugen(randomBlockSize);
+			}
 		}
+
 		else {
 			// Leeg 1 procent van het geheugengebied
-            for (int filled = 0 ; filled < fillSize; filled += blockSize)
+            for (int filled = 0 ; filled < fillSize; filled += randomBlockSize) {
+				if (objecten.empty()) break;
+				totalSize -= randomBlockSize;
 				vergeetRandom();
+            }
 		}
 	}
 

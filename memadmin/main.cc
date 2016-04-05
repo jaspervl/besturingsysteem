@@ -41,13 +41,13 @@ using std::vector;
 // Globale hulpvariabelen voor 'main' en 'doOptions'
 
 // wat gaan we doen
-int			  size = 1024;			///< de omvang van het beheerde geheugen  (WORST CASE)
+int			  size = 1048576;		/// (~1MB)		< de omvang van het beheerde geheugen
 bool		  cflag = false;		///< laat de allocator foute 'free' acties detecteren
 									///< (voor sommige algorithmes is dit duur)
 
 // operationele informatie
 vector<Allocator*>	beheerders;		///< de gekozen beheerders
-int			  aantal = 10000000;		///< hoe vaak doen we iets met dat geheugen
+int			  aantal = 1000;		///< hoe vaak doen we iets met dat geheugen
 bool		  tflag = false;		///< 'true' als we de code willen "testen"
 									///< anders wordt er "gemeten".
 bool		  vflag = false;		///< vertel wat er allemaal gebeurt
@@ -229,7 +229,7 @@ int  main(int argc, char *argv[])
 				// python Interpeter Scenario
 				cout << AC_BLUE "Measuring " << beheerder->getType()
 					 << " doing " << aantal << " calls on " << size << " units\n" AA_RESET;
-				mp->pythonInterpreter(aantal, size, vflag);
+				mp->pythonInterpreter(aantal, size, vflag, 5, 12);
 				/// END CUSTOM
 			}
 
