@@ -46,9 +46,11 @@ void	Sequence::execute()
 		{
             int pid = fork();
             if(pid > 0)
-                wait(0);
-            else
+                wait(0);		///AKK: eh, geen achtergrond processen mogelijk ?
+            else {
                 pp->execute();
+				notreached();	///AKK: added
+			}
         }
 	}	// else ignore empty pipeline
 }

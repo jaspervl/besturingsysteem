@@ -62,8 +62,13 @@ bool	Command::isEmpty() const
 	return input.empty() && output.empty() && words.empty();
 }
 
+///AKK: Wat bepaalt deze functie???
+///		De opdrachten die deze shell zelf doet?
+///		Want dan horen ls, rm, clear, echo etc er niet bij!
 bool    Command::hasDirectCommand()
 {
+	///AKK: En waarom bekijken jullie alle woorden?
+	///		Leuk als je "print this is an exit" als opdracht intikt
     for (int i = 0 ; i < words.size() ; ++i) {
         std::string w = words[i];
         if(     w == "cd"
@@ -91,8 +96,6 @@ void	Command::execute()
         args[index] = &words[index][0];
     args[words.size()] = 0;
 
-
-
     // Output aanwezig
     if(hasOutput()) {
 
@@ -100,25 +103,27 @@ void	Command::execute()
         char *fileName = (char*)output.c_str();
         int pfd;
 
-        if(append)
+        if(append)				///AKK: Niet RDWR (update) maar WRONLY (write-only) !
+								///		(Overigens, dat is typisch gedrag in een windows omgeving)
             pfd = open(fileName, O_APPEND | O_RDWR, S_IWUSR | S_IRUSR);
         else
             pfd = open(fileName, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
         // http://codewiki.wikidot.com/c:system-calls:dup2
-        dup2(pfd, PIPE_READ);
+        dup2(pfd, PIPE_READ);		///AKK: naar 0 ??? Dit was geen "<input_file" opdracht!
         dup2(pfd, PIPE_WRITE);
         close(pfd);
-        execvp(args[0], args);
+        execvp(args[0], args);		///AKK: nu al ? dus " a <b >c " kan niet
 
     // Input aanwezig
 	} else if (hasInput()) {
 
         char *fileName = (char*) input.c_str();
+				///AKK: Eh? RDWR|CREAT maw "for update" en "create_if_needed" ??
         int pfd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
         dup2(pfd, PIPE_READ);
         close(pfd);
-        execvp(args[0], args);
+        execvp(args[0], args);		///AKK: nu al? dus " a <b >c " kan niet
 
     // Perform a direct command by delegating it to the appropreate shell ;-)
     /// TODO: Werkt niet goed
@@ -126,36 +131,46 @@ void	Command::execute()
 
         if (words[0] == "exit") {
             cerr << "Exiting." << endl;
-            exit(0);    // perform exit
-            return;
+            exit(0);    // perform exit		///AKK: tja, dat heeft geen effect op het oorspronkelijke proces
+			return;	///AKK: return naar waar? wat ga je nu doen?
         }
 
-        int cid = fork();
+        int cid = fork();			///AKK: eh? Je bent toch al degene die dit moet doen?
         if (cid > 0) {
             if (words[0] == "cd") {
-                if (chdir(args[1]) < 0)
+                if (chdir(args[1]) < 0) {	///AKK: tja, heeft geen effect voor het oorspronkelijke proces
+					perror(args[1]);		///AKK: addded, properly inform user about problems
                     cerr << "> File or directory not recognized;" << endl;
-                return;
+				}
+                return;	///AKK: return naar waar? wat ga je nu doen?
             }
             execvp(args[0], args);
+			perror(args[0]);		///AKK: added
             cerr << "Failed executing direct command." << endl;
             exit(0);
         } else {
             wait(0);
+			///AKK: en wat wou je hierna gaan doen ?
         }
 
-    // Open a program
+    // Open a program	///AKK: Je "opent" geen programma, je "executeer" een programma
     } else {
 
-
+		cerr << "PATH=" << getenv("PATH") << endl;	///AKK: added
         // www.cplusplus.com/reference/cstdlib/getenv/
         char* path = getenv("PATH");
         strtok(path, ":");
         strcat(path, "/");
         strcat(path, args[0]);
+		cerr << "PATH=" << getenv("PATH") << endl;	///AKK: added, want:
+					/// A: deze code maak PATH kapot!
+					/// B: deze code kijkt alleen naar het 1e element van PATH
+					/// C: beter nadenken over de slides! 6.processes: #107
+					/// D: wat gebeurt er als je de opdracht: /bin/xyz in tikt? of: ./bin/main ?
+					///			m.a.w. de "pathname" is al compleet?
 
         char dir[1024];
-        getcwd(dir, 1024);
+        getcwd(dir, 1024);			///AKK: Wat wil je gaan doen met de *huidige* directory???
         strcat(dir, "/");
         strcat(dir, args[0]);
 
@@ -163,6 +178,7 @@ void	Command::execute()
         perror("Failed executing command.\n");
         exit(0);
     }
+	notreached(); ///AKK: added
 }
 
 
