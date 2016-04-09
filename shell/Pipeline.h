@@ -65,6 +65,14 @@ class	Pipeline
 		/// Subsequent processes will be interconnected to each other
 		/// via pipes (See: unix manual: pipe(2))
 		void	execute();
+
+		inline bool hasDirectCommand() {
+            for (std::vector<Command*>::iterator it ; it != commands.end() ; ++it) {
+                Command *cmd = *it;
+                if (cmd->hasDirectCommand()) return true;
+            }
+            return false;
+		}
 };
 
 // vim:ai:aw:ts=4:sw=4:

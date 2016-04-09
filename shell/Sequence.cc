@@ -44,13 +44,32 @@ void	Sequence::execute()
         Pipeline  *pp = *i;
 		if (!pp->isEmpty())
 		{
-            int pid = fork();
-            if(pid > 0)
-                wait(0);		///AKK: eh, geen achtergrond processen mogelijk ?
-            else {
+
+            if (pp->hasDirectCommand()) {
                 pp->execute();
-				notreached();	///AKK: added
-			}
+            } else {
+                int pid = fork();
+                if (pid == 0) {
+                    pp->execute();
+                    notreached();
+                } else if (pid > 0) {
+                    if (!pp->isBackground() || j== 1) {
+                        wait (0);
+                    }
+                }
+            }
+
+
+
+
+
+//            int pid = fork();
+//            if(pid > 0)
+//                wait(0);		///AKK: eh, geen achtergrond processen mogelijk ?
+//            else {
+//                pp->execute();
+//				notreached();	///AKK: added
+//			}
         }
 	}	// else ignore empty pipeline
 }

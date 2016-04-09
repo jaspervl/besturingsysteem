@@ -73,11 +73,7 @@ bool    Command::hasDirectCommand()
         std::string w = words[i];
         if(     w == "cd"
             ||  w == "exit"
-            ||  w == "ls"
-            ||  w == "pwd"
-            ||  w == "rm"
-            ||  w == "clear"
-            ||  w == "echo")
+            ||  w == "pwd")
             return true;
     }
     return false;

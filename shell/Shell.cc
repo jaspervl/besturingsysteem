@@ -29,8 +29,6 @@ void	Shell::main()
 	signal(SIGINT,SIG_IGN);
 	signal(SIGQUIT,SIG_IGN);
 	// but never these ones
-	// TODO:
-
 
 	// The command loop
 	do {
