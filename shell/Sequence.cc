@@ -44,16 +44,18 @@ void	Sequence::execute()
         Pipeline  *pp = *i;
 		if (!pp->isEmpty())
 		{
-
+                cout << "Direct" << endl;
             if (pp->hasDirectCommand()) {
+                cout << "Direct" << endl;
                 pp->execute();
+
             } else {
                 int pid = fork();
                 if (pid == 0) {
                     pp->execute();
                     notreached();
                 } else if (pid > 0) {
-                    if (!pp->isBackground() || j== 1) {
+                    if (!pp->isBackground() || j == 1) {
                         wait (0);
                     }
                 }

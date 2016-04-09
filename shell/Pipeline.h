@@ -67,7 +67,7 @@ class	Pipeline
 		void	execute();
 
 		inline bool hasDirectCommand() {
-            for (std::vector<Command*>::iterator it ; it != commands.end() ; ++it) {
+            for (std::vector<Command*>::iterator it = commands.begin() ; it != commands.end() ; ++it) {
                 Command *cmd = *it;
                 if (cmd->hasDirectCommand()) return true;
             }

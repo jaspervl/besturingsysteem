@@ -160,7 +160,7 @@
 	<vector>
 	"Pipeline.h"
 
-1460195313 /home/enjee/besturingsysteem/shell/Pipeline.h
+1460196041 /home/enjee/besturingsysteem/shell/Pipeline.h
 	<vector>
 	"Command.h"
 
@@ -180,7 +180,7 @@
 	"Pipeline.h"
 	"stdio.h"
 
-1460194622 source:/home/enjee/besturingsysteem/shell/Sequence.cc
+1460195806 source:/home/enjee/besturingsysteem/shell/Sequence.cc
 	<iostream>
 	<sys/wait.h>
 	<unistd.h>
