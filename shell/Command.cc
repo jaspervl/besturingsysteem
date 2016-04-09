@@ -97,8 +97,7 @@ void	Command::execute()
         char *fileName = (char*)output.c_str();
         int pfd;
 
-        if(append)				///AKK: Niet RDWR (update) maar WRONLY (write-only) !
-								///		(Overigens, dat is typisch gedrag in een windows omgeving)
+        if(append)
             pfd = open(fileName, O_APPEND | O_WRONLY, S_IWUSR | S_IRUSR);
         else
             pfd = open(fileName, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR);
@@ -117,6 +116,9 @@ void	Command::execute()
         int pfd = open(fileName, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
         dup2(pfd, PIPE_READ);
         close(pfd);
+
+        cout << args[0] << endl;
+
         execvp(args[0], args);		///AKK: nu al? dus " a <b >c " kan niet
 
     // Open a program	///AKK: Je "opent" geen programma, je "executeer" een programma
