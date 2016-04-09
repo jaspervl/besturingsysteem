@@ -32,7 +32,7 @@ void	Shell::main()
 
 	// The command loop
 	do {
-		cout << "SHELL: " << flush;				// prompt the user for command
+		cout << " > " << flush;				// prompt the user for command
 		Sequence  *sequence = parse();			// parse one line of input
 		// syntax sanity check
 		if ( (tp->getType() != Token::EOL)		// expect either an EOL

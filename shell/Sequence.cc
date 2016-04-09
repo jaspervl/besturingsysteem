@@ -44,18 +44,19 @@ void	Sequence::execute()
         Pipeline  *pp = *i;
 		if (!pp->isEmpty())
 		{
-            if (pp->hasDirectCommand()) {
-                pp->execute();
+            if (pp->hasExit()) {
+                cout << "Exiting shell, goodbye." << endl;
+                exit(EXIT_SUCCESS);
+            }
 
-            } else {
-                int pid = fork();
-                if (pid == 0) {
-                    pp->execute();
-                    notreached();
-                } else if (pid > 0) {
-                    if (!pp->isBackground() || j == 1) {
-                        wait (0);
-                    }
+            int pid = fork();
+            if (pid == 0) {
+                pp->execute();
+                notreached();
+            } else if (pid > 0) {
+                if (!pp->isBackground() || j == 1) {
+                    int xid = wait (0);
+                    close(xid);
                 }
             }
         }

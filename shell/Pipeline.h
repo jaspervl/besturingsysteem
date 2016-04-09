@@ -66,10 +66,10 @@ class	Pipeline
 		/// via pipes (See: unix manual: pipe(2))
 		void	execute();
 
-		inline bool hasDirectCommand() {
+		inline bool hasExit() {
             for (std::vector<Command*>::iterator it = commands.begin() ; it != commands.end() ; ++it) {
                 Command *cmd = *it;
-                if (cmd->hasDirectCommand()) return true;
+                if (cmd->hasExit()) return true;
             }
             return false;
 		}

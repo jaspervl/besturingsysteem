@@ -65,15 +65,13 @@ bool	Command::isEmpty() const
 ///AKK: Wat bepaalt deze functie???
 ///		De opdrachten die deze shell zelf doet?
 ///		Want dan horen ls, rm, clear, echo etc er niet bij!
-bool    Command::hasDirectCommand()
+bool    Command::hasExit()
 {
 	///AKK: En waarom bekijken jullie alle woorden?
 	///		Leuk als je "print this is an exit" als opdracht intikt
     for (int i = 0 ; i < words.size() ; ++i) {
         std::string w = words[i];
-        if(     w == "cd"
-            ||  w == "exit"
-            ||  w == "pwd")
+        if(w == "exit")
             return true;
     }
     return false;
@@ -101,9 +99,9 @@ void	Command::execute()
 
         if(append)				///AKK: Niet RDWR (update) maar WRONLY (write-only) !
 								///		(Overigens, dat is typisch gedrag in een windows omgeving)
-            pfd = open(fileName, O_APPEND | O_RDONLY, S_IWUSR | S_IRUSR);
+            pfd = open(fileName, O_APPEND | O_WRONLY, S_IWUSR | S_IRUSR);
         else
-            pfd = open(fileName, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
+            pfd = open(fileName, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR);
 
         // http://codewiki.wikidot.com/c:system-calls:dup2
         dup2(pfd, PIPE_READ);		///AKK: naar 0 ??? Dit was geen "<input_file" opdracht!
@@ -116,22 +114,10 @@ void	Command::execute()
 
         char *fileName = (char*) input.c_str();
 				///AKK: Eh? RDWR|CREAT maw "for update" en "create_if_needed" ??
-        int pfd = open(fileName, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        int pfd = open(fileName, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
         dup2(pfd, PIPE_READ);
         close(pfd);
         execvp(args[0], args);		///AKK: nu al? dus " a <b >c " kan niet
-
-    // Perform a direct command by delegating it to the appropreate shell ;-)
-	} else if(hasDirectCommand()) {
-
-        if (words[0] == "exit") {
-            cerr << "Exiting." << endl;
-            exit(EXIT_SUCCESS);    // perform exit		///AKK: tja, dat heeft geen effect op het oorspronkelijke proces
-        } else if (words[0] == "cd") {
-            cerr << "TODO CD" << endl;
-        } else if (words[0] == "pwd") {
-            cerr << "TODO PWD" << endl;
-        }
 
     // Open a program	///AKK: Je "opent" geen programma, je "executeer" een programma
     } else {
