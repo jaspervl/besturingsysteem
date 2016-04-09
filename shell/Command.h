@@ -60,9 +60,13 @@ class	Command
 		/// If the name begins with "./" it is relative to the current directory.
 		/// Otherwise it is to be searched for using the PATH environment variable.
 		/// (Also see getenv(3), getcwd(3), access(2), execv(3)).
-		void	execute();
+		void	                execute();
 
-        bool    hasExit();
+        bool                    hasExit();
+        bool                    hasCD();
+        inline std::string*     getDirectory() {
+            return &words[1];
+        }
 };
 
 // vim:ai:aw:ts=4:sw=4:

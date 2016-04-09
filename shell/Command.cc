@@ -62,16 +62,23 @@ bool	Command::isEmpty() const
 	return input.empty() && output.empty() && words.empty();
 }
 
-///AKK: Wat bepaalt deze functie???
-///		De opdrachten die deze shell zelf doet?
-///		Want dan horen ls, rm, clear, echo etc er niet bij!
+// Check if a exit command is present.
 bool    Command::hasExit()
 {
-	///AKK: En waarom bekijken jullie alle woorden?
-	///		Leuk als je "print this is an exit" als opdracht intikt
     for (int i = 0 ; i < words.size() ; ++i) {
         std::string w = words[i];
         if(w == "exit")
+            return true;
+    }
+    return false;
+}
+
+// Check if a cd command is present.
+bool    Command::hasCD()
+{
+    for (int i = 0 ; i < words.size() ; ++i) {
+        std::string w = words[i];
+        if(w == "cd")
             return true;
     }
     return false;
@@ -90,8 +97,35 @@ void	Command::execute()
         args[index] = &words[index][0];
     args[words.size()] = 0;
 
+    if (hasOutput() && hasInput()) {
+
+        // Stackoverflow example. Licht aangepast.
+        char *outputFile = (char*)output.c_str();
+        int fdO;
+
+        if(append)
+            fdO = open(outputFile, O_APPEND | O_WRONLY, S_IWUSR | S_IRUSR);
+        else
+            fdO = open(outputFile, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR);
+
+        dup2(fdO, PIPE_WRITE);
+        close(fdO);
+
+        char *inputFile = (char*) input.c_str();
+				///AKK: Eh? RDWR|CREAT maw "for update" en "create_if_needed" ??
+        int fdI = open(inputFile, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        dup2(fdI, PIPE_READ);
+        close(fdI);
+
+        execvp(args[0], args);
+        perror("Failed performing in and output");
+        exit(EXIT_FAILURE);
+
+
+
+
     // Output aanwezig
-    if(hasOutput()) {
+    } else if(hasOutput()) {
 
         // Stackoverflow example. Licht aangepast.
         char *fileName = (char*)output.c_str();
@@ -100,48 +134,38 @@ void	Command::execute()
         if(append)
             pfd = open(fileName, O_APPEND | O_WRONLY, S_IWUSR | S_IRUSR);
         else
-            pfd = open(fileName, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR);
+            pfd = open(fileName, O_CREAT | O_WRONLY, S_IWUSR | S_IRUSR);
 
         // http://codewiki.wikidot.com/c:system-calls:dup2
-        dup2(pfd, PIPE_READ);		///AKK: naar 0 ??? Dit was geen "<input_file" opdracht!
         dup2(pfd, PIPE_WRITE);
         close(pfd);
-        execvp(args[0], args);		///AKK: nu al ? dus " a <b >c " kan niet
+        execvp(args[0], args);
+        perror("Failed performing output");
+        exit(EXIT_FAILURE);
 
     // Input aanwezig
 	} else if (hasInput()) {
 
         char *fileName = (char*) input.c_str();
 				///AKK: Eh? RDWR|CREAT maw "for update" en "create_if_needed" ??
-        int pfd = open(fileName, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        int pfd = open(fileName, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         dup2(pfd, PIPE_READ);
         close(pfd);
+        execvp(args[0], args);
+        perror("Failed writing input");
+        exit(EXIT_FAILURE);
 
-        cout << args[0] << endl;
+    } else if (hasCD()) {
 
-        execvp(args[0], args);		///AKK: nu al? dus " a <b >c " kan niet
 
-    // Open a program	///AKK: Je "opent" geen programma, je "executeer" een programma
+    // Executeer een programma of commando
     } else {
-
-		cerr << "PATH=" << getenv("PATH") << endl;	///AKK: added
-        // www.cplusplus.com/reference/cstdlib/getenv/
-        char* path = getenv("PATH");
-        strtok(path, ":");
-        strcat(path, "/");
-        strcat(path, args[0]);
-		cerr << "PATH=" << getenv("PATH") << endl;	///AKK: added, want:
-					/// A: deze code maak PATH kapot!
-					/// B: deze code kijkt alleen naar het 1e element van PATH
-					/// C: beter nadenken over de slides! 6.processes: #107
-					/// D: wat gebeurt er als je de opdracht: /bin/xyz in tikt? of: ./bin/main ?
-					///			m.a.w. de "pathname" is al compleet?
-
-        execv(path, args);
-        perror("Failed executing command.\n");
-        exit(0);
+        execvp(args[0], args);
+        perror("Failed executing command");
+        exit(EXIT_FAILURE);
     }
-	notreached(); ///AKK: added
+    cout << "end of command reached!" << endl;
+	notreached();
 }
 
 

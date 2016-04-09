@@ -66,12 +66,35 @@ class	Pipeline
 		/// via pipes (See: unix manual: pipe(2))
 		void	execute();
 
+		/// Check if one of the commands is exit
 		inline bool hasExit() {
             for (std::vector<Command*>::iterator it = commands.begin() ; it != commands.end() ; ++it) {
                 Command *cmd = *it;
-                if (cmd->hasExit()) return true;
+                if (cmd->hasExit())
+                    return true;
             }
             return false;
+		}
+
+        /// Check if one of the commands is cd
+		inline bool hasCD() {
+            for (std::vector<Command*>::iterator it = commands.begin() ; it != commands.end() ; ++it) {
+                Command *cmd = *it;
+                if (cmd->hasCD())
+                    return true;
+            }
+            return false;
+		}
+
+		/// Get the directory of a command to complete a cd call
+		inline std::string* getDirectory() {
+            // Doing double work, but there are almost never many commands
+            for (std::vector<Command*>::iterator it = commands.begin() ; it != commands.end() ; ++it) {
+                Command *cmd = *it;
+                if (cmd->hasCD())
+                    return cmd->getDirectory();
+            }
+            return 0;
 		}
 };
 

@@ -44,19 +44,28 @@ void	Sequence::execute()
         Pipeline  *pp = *i;
 		if (!pp->isEmpty())
 		{
+            // Pipeline has exit command
             if (pp->hasExit()) {
                 cout << "Exiting shell, goodbye." << endl;
                 exit(EXIT_SUCCESS);
-            }
 
-            int pid = fork();
-            if (pid == 0) {
-                pp->execute();
-                notreached();
-            } else if (pid > 0) {
-                if (!pp->isBackground() || j == 1) {
-                    int xid = wait (0);
-                    close(xid);
+            // Pipeline has CD command
+            } else if (pp->hasCD() != 0) {
+                const char *directory = pp->getDirectory()->c_str();
+                if (chdir(directory) < 0)
+                    perror(directory);
+
+            // Pipeline has any other command
+            } else {
+                int pid = fork();
+                if (pid == 0) {
+                    pp->execute();
+                    notreached();
+                } else if (pid > 0) {
+                    if (!pp->isBackground() || j == 1) {
+                        int xid = wait (0);
+                        close(xid);
+                    }
                 }
             }
         }
