@@ -112,7 +112,6 @@ void	Command::execute()
         close(fdO);
 
         char *inputFile = (char*) input.c_str();
-				///AKK: Eh? RDWR|CREAT maw "for update" en "create_if_needed" ??
         int fdI = open(inputFile, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
         dup2(fdI, PIPE_READ);
         close(fdI);
@@ -147,7 +146,6 @@ void	Command::execute()
 	} else if (hasInput()) {
 
         char *fileName = (char*) input.c_str();
-				///AKK: Eh? RDWR|CREAT maw "for update" en "create_if_needed" ??
         int pfd = open(fileName, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         dup2(pfd, PIPE_READ);
         close(pfd);
