@@ -169,11 +169,6 @@ void	Command::execute()
 					/// D: wat gebeurt er als je de opdracht: /bin/xyz in tikt? of: ./bin/main ?
 					///			m.a.w. de "pathname" is al compleet?
 
-        char dir[1024];
-        getcwd(dir, 1024);			///AKK: Wat wil je gaan doen met de *huidige* directory???
-        strcat(dir, "/");
-        strcat(dir, args[0]);
-
         execv(path, args);
         perror("Failed executing command.\n");
         exit(0);
