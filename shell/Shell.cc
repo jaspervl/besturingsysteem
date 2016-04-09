@@ -26,7 +26,8 @@ Shell::Shell(istream& input)
 void	Shell::main()
 {
 	// Ignore some signals
-	// TODO:								///AKK: tja, er staat toch echt TODO
+	signal(SIGINT,SIG_IGN);
+	signal(SIGQUIT,SIG_IGN);
 	// but never these ones
 	// TODO:
 

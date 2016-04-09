@@ -1,0 +1,103 @@
+# depslib dependency file v1.0
+1460189910 source:/home/jasper/besturingsysteem/shell/assert_error.cc
+	<string>
+	<sstream>
+	"assert_error.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/assert_error.h
+	<stdexcept>
+
+1460190442 source:/home/jasper/besturingsysteem/shell/Command.cc
+	<iostream>
+	<cstdlib>
+	<unistd.h>
+	<limits.h>
+	<fcntl.h>
+	<stdio.h>
+	<string.h>
+	<sys/wait.h>
+	"asserts.h"
+	"unix_error.h"
+	"Command.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/asserts.h
+	"where.h"
+	"assert_error.h"
+
+1460189911 /home/jasper/besturingsysteem/shell/where.h
+
+1460189911 /home/jasper/besturingsysteem/shell/unix_error.h
+	<stdexcept>
+	<string>
+	"where.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/Command.h
+	<string>
+	<vector>
+
+1460189911 source:/home/jasper/besturingsysteem/shell/main.cc
+	<stdexcept>
+	<iostream>
+	<cstdlib>
+	"ansi.h"
+	"assert_error.h"
+	"unix_error.h"
+	"Shell.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/ansi.h
+	"common.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/common.h
+
+1460189910 /home/jasper/besturingsysteem/shell/Shell.h
+	<iostream>
+	"Sequence.h"
+	"Token.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/Sequence.h
+	<vector>
+	"Pipeline.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/Pipeline.h
+	<vector>
+	"Command.h"
+
+1460189910 /home/jasper/besturingsysteem/shell/Token.h
+	<string>
+	<istream>
+
+1460189910 source:/home/jasper/besturingsysteem/shell/Pipeline.cc
+	<iostream>
+	<unistd.h>
+	<fcntl.h>
+	<signal.h>
+	<stdlib.h>
+	<sys/wait.h>
+	"asserts.h"
+	"unix_error.h"
+	"Pipeline.h"
+	"stdio.h"
+
+1460189910 source:/home/jasper/besturingsysteem/shell/Sequence.cc
+	<iostream>
+	<sys/wait.h>
+	<unistd.h>
+	<fcntl.h>
+	<signal.h>
+	<cstring>
+	"asserts.h"
+	"unix_error.h"
+	"Sequence.h"
+
+1460189910 source:/home/jasper/besturingsysteem/shell/Token.cc
+	"asserts.h"
+	"Token.h"
+	<cctype>
+	<cstring>
+
+1460189911 source:/home/jasper/besturingsysteem/shell/unix_error.cc
+	<cstring>
+	<cerrno>
+	<sstream>
+	"unix_error.h"
+
