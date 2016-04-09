@@ -101,7 +101,7 @@ void	Command::execute()
 
         if(append)				///AKK: Niet RDWR (update) maar WRONLY (write-only) !
 								///		(Overigens, dat is typisch gedrag in een windows omgeving)
-            pfd = open(fileName, O_APPEND | O_RDWR, S_IWUSR | S_IRUSR);
+            pfd = open(fileName, O_APPEND | O_RDONLY, S_IWUSR | S_IRUSR);
         else
             pfd = open(fileName, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
@@ -122,31 +122,15 @@ void	Command::execute()
         execvp(args[0], args);		///AKK: nu al? dus " a <b >c " kan niet
 
     // Perform a direct command by delegating it to the appropreate shell ;-)
-    /// TODO: Werkt niet goed
 	} else if(hasDirectCommand()) {
 
         if (words[0] == "exit") {
             cerr << "Exiting." << endl;
-            exit(0);    // perform exit		///AKK: tja, dat heeft geen effect op het oorspronkelijke proces
-			return;	///AKK: return naar waar? wat ga je nu doen?
-        }
-
-        int cid = fork();			///AKK: eh? Je bent toch al degene die dit moet doen?
-        if (cid > 0) {
-            if (words[0] == "cd") {
-                if (chdir(args[1]) < 0) {	///AKK: tja, heeft geen effect voor het oorspronkelijke proces
-					perror(args[1]);		///AKK: addded, properly inform user about problems
-                    cerr << "> File or directory not recognized;" << endl;
-				}
-                return;	///AKK: return naar waar? wat ga je nu doen?
-            }
-            execvp(args[0], args);
-			perror(args[0]);		///AKK: added
-            cerr << "Failed executing direct command." << endl;
-            exit(0);
-        } else {
-            wait(0);
-			///AKK: en wat wou je hierna gaan doen ?
+            exit(EXIT_SUCCESS);    // perform exit		///AKK: tja, dat heeft geen effect op het oorspronkelijke proces
+        } else if (words[0] == "cd") {
+            cerr << "TODO CD" << endl;
+        } else if (words[0] == "pwd") {
+            cerr << "TODO PWD" << endl;
         }
 
     // Open a program	///AKK: Je "opent" geen programma, je "executeer" een programma

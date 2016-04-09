@@ -61,12 +61,12 @@ void	Pipeline::execute()
         // Last command
 		if (j == 1) {
             cp->execute();
-			notreached();	///AKK: added
+			notreached();
 
         } else if (j > 1) {
             if(pipe(p) == -1) {
                 perror("Pipe creation failed.");
-				///AKK: En daarna ga je vrolijk verder alsof er niets is gebeurt....
+                exit(EXIT_FAILURE);
 			}
 
             int cid = fork();
@@ -81,13 +81,13 @@ void	Pipeline::execute()
                 close(p[PIPE_READ]);
                 close(p[PIPE_WRITE]);
                 cp->execute();
-				notreached(); ///AKK: added
+				notreached();
             } else
                 perror("Fork creation failed.");
 
         } else {
             cp->execute();
-			notreached(); ///AKK: added
+			notreached();
         }
 	}
 }

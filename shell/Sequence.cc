@@ -44,9 +44,7 @@ void	Sequence::execute()
         Pipeline  *pp = *i;
 		if (!pp->isEmpty())
 		{
-                cout << "Direct" << endl;
             if (pp->hasDirectCommand()) {
-                cout << "Direct" << endl;
                 pp->execute();
 
             } else {
@@ -60,18 +58,6 @@ void	Sequence::execute()
                     }
                 }
             }
-
-
-
-
-
-//            int pid = fork();
-//            if(pid > 0)
-//                wait(0);		///AKK: eh, geen achtergrond processen mogelijk ?
-//            else {
-//                pp->execute();
-//				notreached();	///AKK: added
-//			}
         }
 	}	// else ignore empty pipeline
 }

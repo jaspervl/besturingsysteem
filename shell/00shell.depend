@@ -109,7 +109,7 @@
 1460189902 /home/enjee/besturingsysteem/shell/assert_error.h
 	<stdexcept>
 
-1460195009 source:/home/enjee/besturingsysteem/shell/Command.cc
+1460197073 source:/home/enjee/besturingsysteem/shell/Command.cc
 	<iostream>
 	<cstdlib>
 	<unistd.h>
@@ -160,7 +160,7 @@
 	<vector>
 	"Pipeline.h"
 
-1460196041 /home/enjee/besturingsysteem/shell/Pipeline.h
+1460196230 /home/enjee/besturingsysteem/shell/Pipeline.h
 	<vector>
 	"Command.h"
 
@@ -168,7 +168,7 @@
 	<string>
 	<istream>
 
-1460189902 source:/home/enjee/besturingsysteem/shell/Pipeline.cc
+1460196564 source:/home/enjee/besturingsysteem/shell/Pipeline.cc
 	<iostream>
 	<unistd.h>
 	<fcntl.h>
@@ -180,7 +180,7 @@
 	"Pipeline.h"
 	"stdio.h"
 
-1460195806 source:/home/enjee/besturingsysteem/shell/Sequence.cc
+1460196911 source:/home/enjee/besturingsysteem/shell/Sequence.cc
 	<iostream>
 	<sys/wait.h>
 	<unistd.h>
